@@ -8,8 +8,10 @@
 #define SD_CS_PIN 5  ///< SDカードのCS (Chip Select) ピン
 
 // LovyanGFXのヘッダをインクルード（ここでピン設定を行うため）
+#ifdef ARDUINO_ARCH_ESP32
 #include <hal/LGFX_Config.hpp>
 static LGFX_Config lcd;
+#endif
 
 // --- UART Settings ---
 #define UART_INSTANCE UART_NUM_0    ///< 使用するUARTの番号 (UART0)

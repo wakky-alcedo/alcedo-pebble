@@ -4,7 +4,9 @@
  */
 #pragma once
 
+#ifdef ARDUINO_ARCH_ESP32
 #include <LovyanGFX.hpp>
+#endif
 
 // static LGFX lcd;
 
