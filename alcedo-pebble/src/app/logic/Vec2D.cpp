@@ -19,6 +19,10 @@ float Vec2D::length() const {
     return std::sqrt(x * x + y * y); 
 }
 
+/**
+ * @brief ベクトルを正規化します。
+ * @return 長さが1の正規化されたベクトル
+ */
 Vec2D Vec2D::normalized() const { 
     float l = length(); 
     return (l > 0) ? Vec2D(x / l, y / l) : Vec2D(0, 0); 

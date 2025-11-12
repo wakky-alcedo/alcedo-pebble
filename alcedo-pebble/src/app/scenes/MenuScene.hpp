@@ -21,8 +21,8 @@ private:
     std::vector<std::unique_ptr<Pebble>> pebbles;
     PhysicsEngine physicsEngine;
 
-    Vec2D containerCenter = Vec2D(120, 120);
 	// 物理演算用のコンテナパラメータ
+    Vec2D containerCenter = Vec2D(0, 0);
     float containerRadius = 120.0f;
     unsigned long lastUpdateTime = 0;
 

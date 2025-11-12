@@ -29,7 +29,7 @@ void MenuScene::onEnter() {
 
     // 1. 物理演算用のPebbleオブジェクトを生成
     pebbles.clear(); 
-    float radius = 30.0f; // (SLSでのサイズに合わせる)
+    float radius = 30.0f; // pebbleの半径
     pebbles.push_back(std::make_unique<Pebble>(Vec2D(120, 80), radius, 0)); // ID 0: QR
     pebbles.push_back(std::make_unique<Pebble>(Vec2D(80, 150), radius, 1)); // ID 1: Game
     pebbles.push_back(std::make_unique<Pebble>(Vec2D(160, 150), radius, 2)); // ID 2: Settings
