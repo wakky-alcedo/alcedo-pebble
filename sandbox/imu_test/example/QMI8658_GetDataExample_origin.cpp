@@ -30,51 +30,122 @@
 /**
  * QMI8658から加速度とジャイロデータを取得するサンプルコード
  * I2CまたはSPIインターフェースを使用してQMI8658センサーから加速度とジャイロデータを取得します。
- * esp32-s3ボード向けにピン設定を変更済み
  */
 #include <Arduino.h>
+#include <Wire.h>
+#include <SPI.h>
 #include "SensorQMI8658.hpp"
+#ifdef ARDUINO_T_BEAM_S3_SUPREME
+#include <XPowersAXP2101.tpp>   //PMU Library https://github.com/lewisxhe/XPowersLib.git
+#endif
+
+
+// #define USE_I2C              //Using the I2C interface
+
+#ifdef USE_I2C
+#ifndef SENSOR_SDA
+#define SENSOR_SDA  17
+#endif
+
+#ifndef SENSOR_SCL
+#define SENSOR_SCL  18
+#endif
+
+#else   /* SPI interface*/
+
+#ifndef SPI_MOSI
+#define SPI_MOSI   (35)
+#endif
+
+#ifndef SPI_SCK
+#define SPI_SCK    (36)
+#endif
+
+#ifndef SPI_MISO
+#define SPI_MISO   (37)
+#endif
+
+#endif  /* USE_I2C*/
+
+#ifndef IMU_CS
+#define IMU_CS      34      // IMU CS PIN
+#endif
+
+#ifndef IMU_IRQ
+#define IMU_IRQ     33      // IMU INT PIN
+#endif
+
+#ifndef OLED_SDA
+#define OLED_SDA    22      // Display Wire SDA Pin
+#endif
+
+#ifndef OLED_SCL
+#define OLED_SCL    21      // Display Wire SCL Pin
+#endif
+
 
 SensorQMI8658 qmi;
-
-#define SENSOR_SDA 6
-#define SENSOR_SCL 7
-#define SENSOR_INT1 4
-#define SENSOR_INT2 3
 
 IMUdata acc;
 IMUdata gyr;
 
-void setup() {
-    // put your setup code here, to run once:
-    Serial0.begin(115200);
-    // while (!Serial0) {
-    //   ; // wait for Serial0 port to connect. Needed for native USB
-    // }
-    Serial0.println("IMU Test Starting");
 
-    bool ret = qmi.begin(Wire, QMI8658_L_SLAVE_ADDRESS, SENSOR_SDA, SENSOR_SCL);
+void beginPower()
+{
+    // T_BEAM_S3_SUPREME The PMU voltage needs to be turned on to use the sensor
+#if defined(ARDUINO_T_BEAM_S3_SUPREME)
+    XPowersAXP2101 power;
+    power.begin(Wire1, AXP2101_SLAVE_ADDRESS, 42, 41);
+    power.disableALDO1();
+    power.disableALDO2();
+    delay(250);
+    power.setALDO1Voltage(3300); power.enableALDO1();
+    power.setALDO2Voltage(3300); power.enableALDO2();
+#endif
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    while (!Serial);
+
+    beginPower();
+
+    bool ret = false;
+#ifdef USE_I2C
+    ret = qmi.begin(Wire, QMI8658_L_SLAVE_ADDRESS, SENSOR_SDA, SENSOR_SCL);
+#else
+#if defined(SPI_MOSI) && defined(SPI_SCK) && defined(SPI_MISO)
+    ret = qmi.begin(SPI, IMU_CS, SPI_MOSI, SPI_MISO, SPI_SCK);
+#else
+    ret = qmi.begin(SPI, IMU_CS);
+#endif
+#endif
+
     if (!ret) {
-        Serial0.println("Failed to find QMI8658 - check your wiring!");
+        Serial.println("Failed to find QMI8658 - check your wiring!");
         while (1) {
             delay(1000);
         }
     }
 
-    Serial0.print("Device ID:");
-    Serial0.println(qmi.getChipID(), HEX);
+    /* Get chip id*/
+    Serial.print("Device ID:");
+    Serial.println(qmi.getChipID(), HEX);
+
 
     if (qmi.selfTestAccel()) {
-        Serial0.println("Accelerometer self-test successful");
+        Serial.println("Accelerometer self-test successful");
     } else {
-        Serial0.println("Accelerometer self-test failed!");
+        Serial.println("Accelerometer self-test failed!");
     }
 
     if (qmi.selfTestGyro()) {
-        Serial0.println("Gyroscope self-test successful");
+        Serial.println("Gyroscope self-test successful");
     } else {
-        Serial0.println("Gyroscope self-test failed!");
+        Serial.println("Gyroscope self-test failed!");
     }
+
 
     qmi.configAccelerometer(
         /*
@@ -141,6 +212,9 @@ void setup() {
         * */
         SensorQMI8658::LPF_MODE_3);
 
+
+
+
     /*
     * If both the accelerometer and gyroscope sensors are turned on at the same time,
     * the output frequency will be based on the gyroscope output frequency.
@@ -153,73 +227,65 @@ void setup() {
     // Print register configuration information
     qmi.dumpCtrlRegister();
 
+
+
 #if IMU_IRQ > 0
 // If you want to enable interrupts, then turn on the interrupt enable
     qmi.enableINT(SensorQMI8658::INTERRUPT_PIN_1, true);
     qmi.enableINT(SensorQMI8658::INTERRUPT_PIN_2, false);
 #endif
 
-    Serial0.println("Read data now...");
-
-    delay(1000);
-    
-    Serial0.print("\x1B[2J"); // 画面全体をクリア
+    Serial.println("Read data now...");
 
 }
 
-void loop() {
+
+void loop()
+{
     // When the interrupt pin is passed in through setPin,
     // the GPIO will be read to see if the data is ready.
     if (qmi.getDataReady()) {
 
-        // Serial0.print("Timestamp:");
-        // Serial0.print(qmi.getTimestamp());
-
-        Serial0.print("\x1B[H");
+        // Serial.print("Timestamp:");
+        // Serial.print(qmi.getTimestamp());
 
         if (qmi.getAccelerometer(acc.x, acc.y, acc.z)) {
 
-            // Print to Serial0 plotter
-            Serial0.print("ACCEL.x:"); Serial0.print(acc.x); Serial0.print(",");
-            Serial0.print("ACCEL.y:"); Serial0.print(acc.y); Serial0.print(",");
-            Serial0.print("ACCEL.z:"); Serial0.print(acc.z); Serial0.println();
+            // Print to serial plotter
+            Serial.print("ACCEL.x:"); Serial.print(acc.x); Serial.print(",");
+            Serial.print("ACCEL.y:"); Serial.print(acc.y); Serial.print(",");
+            Serial.print("ACCEL.z:"); Serial.print(acc.z); Serial.println();
 
             /*
             m2/s to mg
-            Serial0.print(" ACCEL.x:"); Serial0.print(acc.x * 1000); Serial0.println(" mg");
-            Serial0.print(",ACCEL.y:"); Serial0.print(acc.y * 1000); Serial0.println(" mg");
-            Serial0.print(",ACCEL.z:"); Serial0.print(acc.z * 1000); Serial0.println(" mg");
+            Serial.print(" ACCEL.x:"); Serial.print(acc.x * 1000); Serial.println(" mg");
+            Serial.print(",ACCEL.y:"); Serial.print(acc.y * 1000); Serial.println(" mg");
+            Serial.print(",ACCEL.z:"); Serial.print(acc.z * 1000); Serial.println(" mg");
             */
-        } else {
-            // データを取得できなかった場合のプレースホルダー
-            Serial0.print("ACCEL: (Waiting for data...)"); 
-        }
 
-        // 3. 1行目の行末までをクリアし，改行する
-        Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-        Serial0.print("\n");     // 2行目へ改行
+        }
 
         if (qmi.getGyroscope(gyr.x, gyr.y, gyr.z)) {
-            // Print to Serial0 plotter
-            Serial0.print("GYRO.x:"); Serial0.print(gyr.x); Serial0.print(",");
-            Serial0.print("GYRO.y:"); Serial0.print(gyr.y); Serial0.print(",");
-            Serial0.print("GYRO.z:"); Serial0.print(gyr.z); Serial0.println();
 
-            // Serial0.print(" GYRO.x:"); Serial0.print(gyr.x); Serial0.println(" degrees/sec");
-            // Serial0.print(",GYRO.y:"); Serial0.print(gyr.y); Serial0.println(" degrees/sec");
-            // Serial0.print(",GYRO.z:"); Serial0.print(gyr.z); Serial0.println(" degrees/sec");
-        } else {
-            // データを取得できなかった場合のプレースホルダー
-            Serial0.print("GYRO: (Waiting for data...)");
+
+            // Print to serial plotter
+            Serial.print("GYRO.x:"); Serial.print(gyr.x); Serial.print(",");
+            Serial.print("GYRO.y:"); Serial.print(gyr.y); Serial.print(",");
+            Serial.print("GYRO.z:"); Serial.print(gyr.z); Serial.println();
+
+
+            // Serial.print(" GYRO.x:"); Serial.print(gyr.x); Serial.println(" degrees/sec");
+            // Serial.print(",GYRO.y:"); Serial.print(gyr.y); Serial.println(" degrees/sec");
+            // Serial.print(",GYRO.z:"); Serial.print(gyr.z); Serial.println(" degrees/sec");
+
         }
 
-        Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-
-        // Serial0.print("Temperature:");
-        // Serial0.print(qmi.getTemperature_C());
-        // Serial0.println(" degrees C");
+        // Serial.print("Temperature:");
+        // Serial.print(qmi.getTemperature_C());
+        // Serial.println(" degrees C");
 
     }
-    delay(100);
+    // delay(100);
 }
+
 

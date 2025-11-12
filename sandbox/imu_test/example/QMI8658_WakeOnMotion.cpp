@@ -30,6 +30,8 @@
 /**
  * QMI8658のWake on Motion機能を使用するサンプルコード
  * QMI8658のWake on Motion機能を使用して，動きを検出したときにマイコンを起動します。
+ * 動きのしきい値は120mg，加速度センサの出力データレートは128Hzに設定しています。
+ * しきい値を変更するときは，configWakeOnMotion関数の引数を変更してください。
  */
 #include <Arduino.h>
 #include <Wire.h>

@@ -1,96 +1,129 @@
 /**
+ *
+ * @license MIT License
+ *
+ * Copyright (c) 2022 lewis he
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * @file      QMI8658_LockingMechanismExample.ino
+ * @author    Lewis He (lewishe@outlook.com)
+ * @date      2022-11-07
+ *
+ */
+/**
  * CPUに余計な負荷をかけず，センサーのデータが準備できた最適なタイミングで効率よくデータを取得するサンプルコード
  * QMI8658のデータレディ割り込みピンを使用して，データが準備できたことを検出します。
  * データレディ割り込みが発生したときにフラグを設定し，メインループでフラグを監視してデータを取得します。
  */
 #include <Arduino.h>
 #include <Wire.h>
+#include <SPI.h>
 #include "SensorQMI8658.hpp"
+#ifdef ARDUINO_T_BEAM_S3_SUPREME
+#include <XPowersAXP2101.tpp>   //PMU Library https://github.com/lewisxhe/XPowersLib.git
+#endif
+
+
+// #define USE_I2C              //Using the I2C interface
+
+#ifdef USE_I2C
+#ifndef SENSOR_SDA
+#define SENSOR_SDA  17
+#endif
+
+#ifndef SENSOR_SCL
+#define SENSOR_SCL  18
+#endif
+
+#else   /* SPI interface */
+
+#ifndef SPI_MOSI
+#define SPI_MOSI   (35)
+#endif
+
+#ifndef SPI_SCK
+#define SPI_SCK    (36)
+#endif
+
+#ifndef SPI_MISO
+#define SPI_MISO   (37)
+#endif
+
+#ifndef IMU_CS
+#define IMU_CS      34      // IMU CS PIN
+#endif
+
+#endif  /* USE_I2C*/
+
+
+#ifndef IMU_IRQ
+#define IMU_IRQ     33      // IMU INT PIN
+#endif
+
+#ifndef OLED_SDA
+#define OLED_SDA    22      // Display Wire SDA Pin
+#endif
+
+#ifndef OLED_SCL
+#define OLED_SCL    21      // Display Wire SCL Pin
+#endif
 
 SensorQMI8658 qmi;
-
-#define SENSOR_SDA 6
-#define SENSOR_SCL 7
-#define SENSOR_INT1 4
-#define SENSOR_INT2 3
 
 IMUdata acc;
 IMUdata gyr;
 
-IMUdata maxAcc = {0.0f, 0.0f, 0.0f};
-IMUdata maxGyr = {0.0f, 0.0f, 0.0f};
-
 bool interruptFlag = false;
 
-void setFlag(void) {
+void setFlag(void)
+{
     interruptFlag = true;
 }
 
 // Callback when data is locked
-void lockingMechanismHandler() {
+void lockingMechanismHandler()
+{
     if (qmi.getAccelerometer(acc.x, acc.y, acc.z)) {
-        Serial0.print("\x1B[H");
-        Serial0.print("{ACCEL: ");
-        Serial0.print(acc.x);
-        Serial0.print(",");
-        Serial0.print(acc.y);
-        Serial0.print(",");
-        Serial0.print(acc.z);
-        Serial0.print("}");
-    } else {
-        Serial0.print("Error reading accelerometer data");
+        Serial.print("{ACCEL: ");
+        Serial.print(acc.x);
+        Serial.print(",");
+        Serial.print(acc.y);
+        Serial.print(",");
+        Serial.print(acc.z);
+        Serial.println("}");
     }
-    
-    Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-    Serial0.print("\n");     // 2行目へ改行
-
-    if (acc.x < maxAcc.x) maxAcc.x = acc.x;
-    if (acc.y < maxAcc.y) maxAcc.y = acc.y;
-    if (acc.z > maxAcc.z) maxAcc.z = acc.z;
-    Serial0.print("Max Accel X:");
-    Serial0.print(maxAcc.x);
-    Serial0.print(" Y:");
-    Serial0.print(maxAcc.y);
-    Serial0.print(" Z:");
-    Serial0.print(maxAcc.z);
-
-    Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-    Serial0.print("\n");
 
     if (qmi.getGyroscope(gyr.x, gyr.y, gyr.z)) {
-        Serial0.print("{GYRO: ");
-        Serial0.print(gyr.x);
-        Serial0.print(",");
-        Serial0.print(gyr.y );
-        Serial0.print(",");
-        Serial0.print(gyr.z);
-        Serial0.println("}");
-    } else {
-        Serial0.print("Error reading gyroscope data");
+        Serial.print("{GYRO: ");
+        Serial.print(gyr.x);
+        Serial.print(",");
+        Serial.print(gyr.y );
+        Serial.print(",");
+        Serial.print(gyr.z);
+        Serial.println("}");
     }
-
-    Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-    Serial0.print("\n");     // 改行
-
-    if (gyr.x > maxGyr.x) maxGyr.x = gyr.x;
-    if (gyr.y > maxGyr.y) maxGyr.y = gyr.y;
-    if (gyr.z > maxGyr.z) maxGyr.z = gyr.z;
-    Serial0.print("Max Gyro X:");
-    Serial0.print(maxGyr.x);
-    Serial0.print(" Y:");
-    Serial0.print(maxGyr.y);
-    Serial0.print(" Z:");
-    Serial0.print(maxGyr.z);
-    
-    Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
-    Serial0.print("\n");     // 改行
-
-    Serial0.print(qmi.getTimestamp());
-    Serial0.print("  ");
-    Serial0.print(qmi.getTemperature_C());
-    Serial0.println("*C");
-
-    Serial0.print("\x1B[K"); // カーソル位置から行末までをクリア
+    Serial.print("\t\t\t\t > ");
+    Serial.print(qmi.getTimestamp());
+    Serial.print("  ");
+    Serial.print(qmi.getTemperature_C());
+    Serial.println("*C");
 }
 
 
@@ -108,24 +141,33 @@ void beginPower()
 #endif
 }
 
-void setup() {
-    Serial0.begin(115200);
-    while (!Serial0);
+void setup()
+{
+    Serial.begin(115200);
+    while (!Serial);
 
     beginPower();
 
     bool ret = false;
+#ifdef USE_I2C
     ret = qmi.begin(Wire, QMI8658_L_SLAVE_ADDRESS, SENSOR_SDA, SENSOR_SCL);
+#else
+#if defined(SPI_MOSI) && defined(SPI_SCK) && defined(SPI_MISO)
+    ret = qmi.begin(SPI, IMU_CS, SPI_MOSI, SPI_MISO, SPI_SCK);
+#else
+    ret = qmi.begin(SPI, IMU_CS);
+#endif
+#endif
 
     if (!ret) {
-        Serial0.println("Failed to find QMI8658 - check your wiring!");
+        Serial.println("Failed to find QMI8658 - check your wiring!");
         while (1) {
             delay(1000);
         }
     }
     /* Get chip id*/
-    Serial0.print("Device ID:");
-    Serial0.println(qmi.getChipID(), HEX);
+    Serial.print("Device ID:");
+    Serial.println(qmi.getChipID(), HEX);
 
     qmi.configAccelerometer(
         /*
@@ -156,6 +198,9 @@ void setup() {
         *  LPF_OFF        // OFF Low-Pass Fitter
         * */
         SensorQMI8658::LPF_MODE_0);
+
+
+
 
     qmi.configGyroscope(
         /*
@@ -208,8 +253,9 @@ void setup() {
     // Use interrupt .
     // QMI8658 interrupt always outputs low level by default,
     // and the interrupt is triggered when the rising edge
-    pinMode(SENSOR_INT2, INPUT_PULLUP);
-    attachInterrupt(SENSOR_INT2, setFlag, RISING);
+    pinMode(IMU_IRQ, INPUT_PULLUP);
+
+    attachInterrupt(IMU_IRQ, setFlag, RISING);
 
     // qmi.enableINT(SensorQMI8658::INTERRUPT_PIN_1); //no use
     // Enable data ready to interrupt pin2
@@ -219,11 +265,13 @@ void setup() {
     // Print register configuration information
     qmi.dumpCtrlRegister();
 
-    Serial0.println("Read data now...");
+
+    Serial.println("Read data now...");
 }
 
 
-void loop() {
+void loop()
+{
     if (interruptFlag) {
         interruptFlag = false;
         qmi.update();
