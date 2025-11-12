@@ -53,6 +53,7 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_align(ui_TimeLabel, LV_ALIGN_CENTER);
 
     ui_WeatherIcon = lv_img_create(ui_MainScreen);
+    lv_img_set_src(ui_WeatherIcon, &ui_img_wether_png);
     lv_obj_set_width(ui_WeatherIcon, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_WeatherIcon, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_WeatherIcon, -50);
@@ -60,8 +61,10 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_align(ui_WeatherIcon, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WeatherIcon, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_WeatherIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_img_set_zoom(ui_WeatherIcon, 50);
 
     ui_NotificationIcon = lv_img_create(ui_MainScreen);
+    lv_img_set_src(ui_NotificationIcon, &ui_img_notify_png);
     lv_obj_set_width(ui_NotificationIcon, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_NotificationIcon, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_NotificationIcon, 36);
@@ -69,15 +72,18 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_align(ui_NotificationIcon, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_NotificationIcon, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_NotificationIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_img_set_zoom(ui_NotificationIcon, 20);
 
     ui_CharacterImage = lv_img_create(ui_MainScreen);
+    lv_img_set_src(ui_CharacterImage, &ui_img_lucid_origin_a_cute_chibi_kingfisher_creature_as_a_digital_pet_0_png);
     lv_obj_set_width(ui_CharacterImage, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_CharacterImage, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_CharacterImage, 37);
+    lv_obj_set_x(ui_CharacterImage, 36);
     lv_obj_set_y(ui_CharacterImage, 60);
     lv_obj_set_align(ui_CharacterImage, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_CharacterImage, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_CharacterImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_img_set_zoom(ui_CharacterImage, 15);
 
     uic_Image1 = ui_Image1;
 
