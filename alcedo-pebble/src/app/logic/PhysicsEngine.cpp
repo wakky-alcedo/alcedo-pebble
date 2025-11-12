@@ -31,9 +31,10 @@ void Pebble::syncLvglObject() {
  * @param dt 時間ステップ
  */
 void Pebble::integrate(float dt) {
+	const float damping = 0.99f;
     float dtSq = dt * dt;
-    Vec2D velocity = pos - oldPos;
-    Vec2D nextPos = pos + velocity + accel * dtSq;
+    Vec2D velocity = pos - oldPos; // 厳密には，速度*dt
+    Vec2D nextPos = pos + velocity * damping + accel * dtSq;
     oldPos = pos;
     pos = nextPos;
     accel = Vec2D(0, 0);
