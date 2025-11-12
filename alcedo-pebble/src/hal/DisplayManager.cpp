@@ -121,7 +121,7 @@ void DisplayManager::init() {
 #ifdef ARDUINO_ARCH_ESP32
     // --- ESP32 (LGFX) の初期化 ---
     lcd.begin();
-    lcd.setRotation( 1 ); 
+    lcd.setRotation( SCREEN_ROTATION ); // 0-7 の範囲で回転を設定
     
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, screenWidth * screenHeight / 10);
 

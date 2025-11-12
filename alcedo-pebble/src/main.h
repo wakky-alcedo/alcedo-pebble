@@ -19,6 +19,9 @@
 
 #include "hal/DisplayManager.hpp"
 
+// Config
+#define SCREEN_ROTATION 1 // 画面の回転設定 (0-7)
+
 // --- クラス前方宣言 ---
 // (各ヘッダで相互参照を防ぐため)
 

@@ -137,6 +137,33 @@ void HardwareManager::update() {
     // 1. IMUデータの読み取り (スタブ)
     imuSensor.getAccelerometer(currentImu.accelX, currentImu.accelY, currentImu.accelZ);
 	imuSensor.getGyroscope(currentImu.gyroX, currentImu.gyroY, currentImu.gyroZ);
+	switch (SCREEN_ROTATION) {
+		case 0:
+			{
+				float tem = currentImu.accelX;
+				currentImu.accelX = currentImu.accelY;
+				currentImu.accelY = -tem;
+			}
+			break;
+		case 1:
+			{
+				currentImu.accelX = -currentImu.accelX;
+				currentImu.accelY = -currentImu.accelY;
+			}
+			break;
+		case 2:
+			{
+				float tem = currentImu.accelX;
+				currentImu.accelX = -currentImu.accelY;
+				currentImu.accelY = tem;
+			}
+			break;
+		case 3:
+			{
+				// そのまま
+			}
+			break;
+	}
 }
 
 void HardwareManager::vibrate(int ms) {
