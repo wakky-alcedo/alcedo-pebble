@@ -20,6 +20,7 @@ public:
     virtual void onExit() override;
 
 private:
+	// キャラクターオブジェクト
     std::unique_ptr<Character> character;
 
     // SLSが生成したUIオブジェクトへのポインタ
@@ -33,6 +34,9 @@ private:
     int lastNotificationCount = 0;
     std::string lastWeatherCondition = "";
 
+    // LVGLイベント遅延登録用タイマー
+    lv_timer_t* eventEnableTimer = nullptr;
+
     void updateTimeLabel();
     void updateWeatherIcon();
     void updateNotificationIcon();
@@ -40,4 +44,7 @@ private:
     // LVGLイベントコールバック
     static void main_screen_event_cb(lv_event_t * e);
     void onScreenLongPress();
+
+	// タイマーコールバック
+    static void enable_events_timer_cb(lv_timer_t * timer);
 };

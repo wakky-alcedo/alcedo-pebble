@@ -9,7 +9,8 @@ MainScene::MainScene() :
     lvWeatherIcon(nullptr),
     lvNotificationIcon(nullptr),
     lastTimeUpdate(0),
-    lastNotificationCount(0)
+    lastNotificationCount(0),
+	eventEnableTimer(nullptr)
 {}
 
 MainScene::~MainScene() {
@@ -45,9 +46,13 @@ void MainScene::onEnter() {
     // シーン遷移用のイベントハンドラをスクリーンに登録
 	// スクリーン自体をクリック可能（イベントを受け取れるよう）にする
 	lv_obj_add_flag(ui_MainScreen, LV_OBJ_FLAG_CLICKABLE);
+
 	// lv_obj_add_event_cb(ui_MainScreen, main_screen_event_cb, LV_EVENT_LONG_PRESSED, this);
-	lv_obj_add_event_cb(ui_MainScreen, main_screen_event_cb, LV_EVENT_ALL, this);
+	// lv_obj_add_event_cb(ui_MainScreen, main_screen_event_cb, LV_EVENT_ALL, this);
 	// thisを入れることで，lv_event_get_user_data(e)でMainSceneのインスタンスを取得可能にする
+    // 200ms後にイベントを有効にするワンショットタイマーを作成
+    eventEnableTimer = lv_timer_create(enable_events_timer_cb, 200, this);
+    lv_timer_set_repeat_count(eventEnableTimer, 1); // 1回だけ実行
 }
 
 void MainScene::update() {
@@ -89,6 +94,14 @@ void MainScene::update() {
 
 void MainScene::onExit() {
     Serial0.println("01 MainScene onExit");
+
+	// 遅延タイマーが残っていれば削除
+    if (eventEnableTimer) {
+        lv_timer_del(eventEnableTimer);
+        eventEnableTimer = nullptr;
+    }
+
+	// LVGLオブジェクトからイベントを削除
     character.reset(); 
     if (ui_MainScreen) {
        lv_obj_remove_event_cb_with_user_data(ui_MainScreen, main_screen_event_cb, this);
@@ -136,4 +149,15 @@ void MainScene::onScreenLongPress() {
     AlcedoPebble& pebble = AlcedoPebble::getInstance();
     pebble.getPowerManager().notifyActivity(); // 操作を通知
     pebble.getSceneManager().changeScene<MenuScene>();
+}
+
+void MainScene::enable_events_timer_cb(lv_timer_t * timer) {
+    MainScene* self = static_cast<MainScene*>(timer->user_data);
+    if (self) {
+        Serial.println("01 LONG_PRESSED event callback added to ui_MainScreen.");
+        if (ui_MainScreen) {
+            lv_obj_add_event_cb(ui_MainScreen, main_screen_event_cb, LV_EVENT_ALL, self);
+        }
+        self->eventEnableTimer = nullptr; // タイマーハンドルをクリア
+    }
 }

@@ -2,7 +2,9 @@
 #include "MainScene.hpp" // メインシーンに戻るため
 #include "app/AlcedoPebble.hpp"
 
-MenuScene::MenuScene() {
+MenuScene::MenuScene() :
+	eventEnableTimer(nullptr)
+{
     lastUpdateTime = millis();
 }
 
@@ -20,7 +22,10 @@ void MenuScene::onEnter() {
         return;
     }
 
-    lv_obj_add_event_cb(ui_MenuScreen, screen_event_cb, LV_EVENT_ALL, this);
+    // lv_obj_add_event_cb(ui_MenuScreen, screen_event_cb, LV_EVENT_ALL, this);
+	// 200ms後にクリックイベントを有効にするワンショットタイマーを作成
+    eventEnableTimer = lv_timer_create(enable_events_timer_cb, 200, this);
+    lv_timer_set_repeat_count(eventEnableTimer, 1); // 1回だけ実行
 
     // 1. 物理演算用のPebbleオブジェクトを生成
     pebbles.clear(); 
@@ -91,6 +96,13 @@ void MenuScene::update() {
 
 void MenuScene::onExit() {
     Serial0.println("02 MenuScene onExit");
+
+    // 遅延タイマーが残っていれば削除
+    if (eventEnableTimer) {
+        lv_timer_del(eventEnableTimer);
+        eventEnableTimer = nullptr;
+    }
+
     // LVGLオブジェクトからイベントを削除
     if (ui_PebbleIconQR) lv_obj_remove_event_cb_with_user_data(ui_PebbleIconQR, pebble_event_cb, this);
     if (ui_PebbleIconGame) lv_obj_remove_event_cb_with_user_data(ui_PebbleIconGame, pebble_event_cb, this);
@@ -130,4 +142,15 @@ void MenuScene::screen_event_cb(lv_event_t * e) {
 void MenuScene::onScreenClicked() {
     Serial0.println("02 Screen clicked, returning to MainScene.");
     AlcedoPebble::getInstance().getSceneManager().changeScene<MainScene>();
+}
+
+void MenuScene::enable_events_timer_cb(lv_timer_t * timer) {
+    MenuScene* self = static_cast<MenuScene*>(timer->user_data);
+    if (self) {
+        Serial.println("02 Long press events enabled for MenuScreen.");
+        if (ui_MenuScreen) {
+            lv_obj_add_event_cb(ui_MenuScreen, screen_event_cb, LV_EVENT_ALL, self);
+        }
+        self->eventEnableTimer = nullptr; // タイマーハンドルをクリア
+    }
 }
