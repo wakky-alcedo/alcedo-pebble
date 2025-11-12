@@ -21,6 +21,7 @@
 // Touch Chip: CST816S -> lgfx::Touch_CST816 (互換)
 
 class LGFX_Config : public lgfx::LGFX_Device
+// class LGFX_Config : public lgfx::v1::LGFX_Device
 {
     // ★ 各インスタンスをクラスメンバとして宣言する
     lgfx::Panel_GC9A01 _panel_instance;
@@ -103,7 +104,8 @@ public:
             cfg.i2c_addr = 0x15; // (CST816のI2Cアドレス)
             cfg.pin_sda = 6;   // TP_SDA
             cfg.pin_scl = 7;   // TP_SCL
-            cfg.freq = 400000;
+            cfg.freq = 400000; // 400kHz
+			// cfg.freq = 100000; // 100kHz
             
             _touch_instance.config(cfg);
             _panel_instance.setTouch(&_touch_instance);

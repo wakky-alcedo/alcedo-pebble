@@ -1,11 +1,13 @@
 /**
- * @file display_manager.cpp
+ * @file DisplayManager.cpp
  * @brief ディスプレイ管理モジュール
  */
-#include "display_manager.h"
+#include "DisplayManager.hpp"
+#include "app/AlcedoPebble.hpp" // PowerManagerに通知するため
 #include <config.h>
-#include <lvgl.h>
+//#include <lvgl.h>
 #include <ui/ui.h>
+#include "main.h"
 
 // LovyanGFXのインスタンス (config.hで設定)
 // #include <LGFX_Config.hpp>
@@ -16,16 +18,14 @@
     //  ESP32実機 (LGFX)
     // ==================
     #include <LovyanGFX.hpp>
-    #include <LGFX_Config.hpp> // ★ご自身のLGFX設定
-    static LGFX_Config lcd;     // ★LGFXインスタンス
-
+    #include <hal/LGFX_Config.hpp> // ★ご自身のLGFX設定
 #else
     // ==================
     //  PCシミュレーション (SDL)
     // ==================
     // #include <SDL2/SDL.h>
-    #include <SDL.h>
-    #include <sdl/sdl.h>
+    //#include <SDL.h>/*
+    //#include <sdl/sdl.h>*/
     // #include "lv_drivers/sdl/sdl.h" // PlatformIO (native) 経由でインストール
 #endif
 
@@ -81,11 +81,13 @@ void touchpad_read(lv_indev_drv_t *indev, lv_indev_data_t *data) {
         data->point.y = touchY;
         data->state = LV_INDEV_STATE_PR;
 
-        // Serial.print( "Data x " );
-        // Serial.println( touchX );
+        // Serial0.print( "Data x " );
+        // Serial0.println( touchX );
 
-        // Serial.print( "Data y " );
-        // Serial.println( touchY );
+        // Serial0.print( "Data y " );
+        // Serial0.println( touchY );
+
+		AlcedoPebble::getInstance().getPowerManager().notifyActivity();
     } else {
         data->state = LV_INDEV_STATE_REL;
     }
@@ -96,15 +98,25 @@ void touchpad_read(lv_indev_drv_t *indev, lv_indev_data_t *data) {
 }
 #endif
 
-/**
- * @brief ディスプレイとLVGLの初期化
- */
-void display_init() {
-    lv_init(); // 共通
+// --- DisplayManager クラス実装 ---
 
-#if LV_USE_LOG != 0
-    // my_print(); // (もし my_print が Serial を使っているなら、それも #ifdef で囲う)
-#endif
+DisplayManager::DisplayManager() {
+    // LGFXのインスタンスを生成（コンフィグがここで読み込まれる）
+    lgfx = std::unique_ptr<LGFX_Config>(new LGFX_Config());
+}
+DisplayManager::~DisplayManager() {}
+
+/**
+ * @brief ディスプレイとLVGLのドライバを初期化します。
+ * @details LCDの初期化、LVGLの基本設定、描画バッファの確保、
+ * ディスプレイおよびタッチドライバのLVGLへの登録を行います。
+ */
+void DisplayManager::init() {
+    Serial0.println("DisplayManager init (using LGFX)...");
+
+	// LVGL本体の初期化
+    lv_init();
+	// ui_events_init();     // UIイベントを関連付け (ui_initの後)
 
 #ifdef ARDUINO_ARCH_ESP32
     // --- ESP32 (LGFX) の初期化 ---
@@ -146,7 +158,7 @@ void display_init() {
     // if (disp == NULL) {
     //     return; 
     // }
-    sdl_init();
+    //sdl_init();
     
     // マウス入力を作成
     // ★ これが v8 の新しい関数です
@@ -155,15 +167,34 @@ void display_init() {
     //     return;
     // }
 #endif
+
+	// SquareLine Studioが生成したUIの初期化
+    ui_init();
+
+    Serial0.println("DisplayManager init complete.");
 }
 
 /**
- * @brief ディスプレイの周期処理 (共通)
+ * @brief LVGLのメインループ処理。
+ * @details この関数をメインループ内で定期的に呼び出すことで、
+ * UIの描画やイベント処理が実行されます。
  */
-void display_handler() {
-    lv_timer_handler(); // LVGLのタイマーハンドラを呼び出す
+void DisplayManager::update() {
+    // LVGLのメインハンドラをタイマーで呼び出す
+    // (PlatformIO/Arduinoのloop()は速度が不安定なため，
+    //  実際にはタイマー割り込みで5ms毎に呼ぶのが望ましい)
+    lv_timer_handler();
 
     #ifndef ARDUINO_ARCH_ESP32
-    SDL_Delay(5);
+    //SDL_Delay(5);
     #endif
+}
+
+void DisplayManager::setBrightness(uint8_t percentage) {
+    uint32_t brightness = (percentage * 255) / 100;
+    lgfx->setBrightness(brightness);
+}
+
+lgfx::LGFX_Device* DisplayManager::getLgfx() {
+    return lgfx.get();
 }

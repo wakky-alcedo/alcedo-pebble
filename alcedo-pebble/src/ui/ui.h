@@ -29,7 +29,8 @@ extern "C" {
 
 ///////////////////// SCREENS ////////////////////
 
-#include "ui_Screen1.h"
+#include "ui_MainScreen.h"
+#include "ui_MenuScreen.h"
 
 ///////////////////// VARIABLES ////////////////////
 

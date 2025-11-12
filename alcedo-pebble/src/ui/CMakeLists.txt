@@ -1,9 +1,11 @@
 SET(SOURCES ui_comp_image1.c
     ui_comp.c
-    ui_Screen1.c
+    ui_MainScreen.c
+    ui_MenuScreen.c
     ui.c
     ui_comp_hook.c
     ui_helpers.c
+    ui_events.c
     ui_img_river_png.c)
 
 add_library(ui ${SOURCES})
