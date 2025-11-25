@@ -1,5 +1,6 @@
 #include "MenuScene.hpp"
 #include "MainScene.hpp" // メインシーンに戻るため
+#include "QrScene.hpp"
 #include "app/AlcedoPebble.hpp"
 
 MenuScene::MenuScene() :
@@ -24,7 +25,7 @@ void MenuScene::onEnter() {
 
     // lv_obj_add_event_cb(ui_MenuScreen, screen_event_cb, LV_EVENT_ALL, this);
 	// 200ms後にクリックイベントを有効にするワンショットタイマーを作成
-    eventEnableTimer = lv_timer_create(enable_events_timer_cb, 200, this);
+    eventEnableTimer = lv_timer_create(enable_events_timer_cb, EVENT_DEBOUNCE_TIME, this);
     lv_timer_set_repeat_count(eventEnableTimer, 1); // 1回だけ実行
 
     // 1. 物理演算用のPebbleオブジェクトを生成
@@ -113,7 +114,11 @@ void MenuScene::onExit() {
 
 // --- LVGL イベントコールバック (static) ---
 void MenuScene::pebble_event_cb(lv_event_t * e) {
-    MenuScene* self = static_cast<MenuScene*>(lv_event_get_user_data(e));
+	// クリックされたらイベント伝播を止める
+	// (背景の screen_event_cb が呼ばれるのを防ぐ)
+	lv_event_stop_bubbling(e); 
+    
+	MenuScene* self = static_cast<MenuScene*>(lv_event_get_user_data(e));
     if (self && lv_event_get_code(e) == LV_EVENT_CLICKED) {
         lv_obj_t* objClicked = lv_event_get_target(e);
         self->onPebbleClicked(objClicked);
@@ -121,15 +126,22 @@ void MenuScene::pebble_event_cb(lv_event_t * e) {
 }
 
 void MenuScene::onPebbleClicked(lv_obj_t* objClicked) {
-    AlcedoPebble::getInstance().getHardwareManager().vibrate(50);
+	AlcedoPebble::getInstance().getHardwareManager().vibrate(100);
 
-    for (auto& pebble : pebbles) {
-        if (pebble->lvglObject == objClicked) {
-            Serial0.printf("02 Pebble ID %d clicked.\n", pebble->id);
-            // (各シーンへの遷移ロジック)
-            return;
-        }
-    }
+	// どの小石がクリックされたか判定
+	if (objClicked == ui_PebbleIconQR) {
+		Serial.println("Pebble QR clicked! Changing to QrScene.");
+		// (QrScene に遷移)
+		AlcedoPebble::getInstance().getSceneManager().changeScene<QrScene>();
+	}
+	else if (objClicked == ui_PebbleIconGame) {
+		Serial.println("Pebble Game clicked!");
+		// (ゲームシーンに遷移)
+	}
+	else if (objClicked == ui_PebbleIconSettings) {
+		Serial.println("Pebble Settings clicked!");
+		// (設定シーンに遷移)
+	}
 }
 
 void MenuScene::screen_event_cb(lv_event_t * e) {

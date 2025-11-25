@@ -31,6 +31,8 @@ extern "C" {
 
 #include "ui_MainScreen.h"
 #include "ui_MenuScreen.h"
+#include "ui_QrScreen.h"
+#include "ui_Screen3.h"
 
 ///////////////////// VARIABLES ////////////////////
 
@@ -45,8 +47,9 @@ LV_IMG_DECLARE(ui_img_wether_png);    // assets/wether.png
 LV_IMG_DECLARE(ui_img_notify_png);    // assets/notify.png
 LV_IMG_DECLARE(
     ui_img_lucid_origin_a_cute_chibi_kingfisher_creature_as_a_digital_pet_0_png);    // assets/Lucid_Origin_A_cute_chibi_kingfisher_creature_as_a_digital_pet_0.png
-LV_IMG_DECLARE(ui_img_qr_60_png);    // assets/qr_60.png
-LV_IMG_DECLARE(ui_img_setting_60_png);    // assets/setting_60.png
+LV_IMG_DECLARE(ui_img_qr3_png);    // assets/qr3.png
+LV_IMG_DECLARE(ui_img_setting2_png);    // assets/setting2.png
+LV_IMG_DECLARE(ui_img_twitter_qr_png);    // assets/Twitter_QR.png
 
 // UI INIT
 void ui_init(void);

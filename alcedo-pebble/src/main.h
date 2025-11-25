@@ -21,6 +21,7 @@
 
 // Config
 #define SCREEN_ROTATION 1 // 画面の回転設定 (0-7)
+#define EVENT_DEBOUNCE_TIME 300 // ms
 
 // --- クラス前方宣言 ---
 // (各ヘッダで相互参照を防ぐため)

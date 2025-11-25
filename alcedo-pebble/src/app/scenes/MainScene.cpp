@@ -51,7 +51,7 @@ void MainScene::onEnter() {
 	// lv_obj_add_event_cb(ui_MainScreen, main_screen_event_cb, LV_EVENT_ALL, this);
 	// thisを入れることで，lv_event_get_user_data(e)でMainSceneのインスタンスを取得可能にする
     // 200ms後にイベントを有効にするワンショットタイマーを作成
-    eventEnableTimer = lv_timer_create(enable_events_timer_cb, 200, this);
+    eventEnableTimer = lv_timer_create(enable_events_timer_cb, EVENT_DEBOUNCE_TIME, this);
     lv_timer_set_repeat_count(eventEnableTimer, 1); // 1回だけ実行
 }
 
