@@ -170,6 +170,7 @@ void MainScene::main_screen_event_cb(lv_event_t * e) {
 void MainScene::onScreenLongPress() {
     AlcedoPebble& pebble = AlcedoPebble::getInstance();
     pebble.getPowerManager().notifyActivity(); // 操作を通知
+	pebble.getInstance().getHardwareManager().vibrate(24); // Sharp Tick 1 - 100%
     pebble.getSceneManager().changeScene<MenuScene>();
 }
 

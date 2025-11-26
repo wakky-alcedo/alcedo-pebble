@@ -125,6 +125,8 @@ void MenuScene::pebble_event_cb(lv_event_t * e) {
 	// クリックされたらイベント伝播を止める
 	// (背景の screen_event_cb が呼ばれるのを防ぐ)
 	lv_event_stop_bubbling(e); 
+
+	AlcedoPebble::getInstance().getHardwareManager().vibrate(24); // Sharp Tick 1 - 100%
     
 	MenuScene* self = static_cast<MenuScene*>(lv_event_get_user_data(e));
     if (self && lv_event_get_code(e) == LV_EVENT_CLICKED) {
@@ -162,6 +164,7 @@ void MenuScene::screen_event_cb(lv_event_t * e) {
 void MenuScene::onScreenClicked() {
     Serial0.println("02 Screen clicked, returning to MainScene.");
     AlcedoPebble::getInstance().getSceneManager().changeScene<MainScene>();
+	AlcedoPebble::getInstance().getHardwareManager().vibrate(24); // Sharp Tick 1 - 100%
 }
 
 void MenuScene::enable_events_timer_cb(lv_timer_t * timer) {

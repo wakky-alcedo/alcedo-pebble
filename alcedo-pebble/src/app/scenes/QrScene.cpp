@@ -63,7 +63,7 @@ void QrScene::screen_event_cb(lv_event_t * e) {
     QrScene* self = static_cast<QrScene*>(lv_event_get_user_data(e));
     if (self && lv_event_get_code(e) == LV_EVENT_CLICKED) {
         Serial.println("03 Screen clicked, returning to MenuScene.");
-        AlcedoPebble::getInstance().getHardwareManager().vibrate(50);
+        AlcedoPebble::getInstance().getHardwareManager().vibrate(24); // Sharp Tick 1 - 100%
         AlcedoPebble::getInstance().getSceneManager().changeScene<MenuScene>();
     }
 }
