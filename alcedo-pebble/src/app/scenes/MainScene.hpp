@@ -28,11 +28,13 @@ private:
     lv_obj_t* lvTimeLabel;
     lv_obj_t* lvWeatherIcon;
     lv_obj_t* lvNotificationIcon;
+	lv_obj_t* lvMainBatteryLabel;
     
     // UI更新のための内部状態
     time_t lastTimeUpdate = 0;
     int lastNotificationCount = 0;
     std::string lastWeatherCondition = "";
+	int lastBatteryPercentage = 0;
 
     // LVGLイベント遅延登録用タイマー
     lv_timer_t* eventEnableTimer = nullptr;
@@ -40,6 +42,7 @@ private:
     void updateTimeLabel();
     void updateWeatherIcon();
     void updateNotificationIcon();
+	void updateBatteryLabel();
     
     // LVGLイベントコールバック
     static void main_screen_event_cb(lv_event_t * e);

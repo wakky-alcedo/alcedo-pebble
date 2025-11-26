@@ -3,7 +3,7 @@ SET(SOURCES ui_comp_image1.c
     ui_MainScreen.c
     ui_MenuScreen.c
     ui_QrScreen.c
-    ui_Screen3.c
+    ui_SettingScreen.c
     ui.c
     ui_comp_hook.c
     ui_helpers.c

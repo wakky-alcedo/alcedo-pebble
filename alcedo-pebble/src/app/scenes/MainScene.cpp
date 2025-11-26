@@ -10,7 +10,9 @@ MainScene::MainScene() :
     lvNotificationIcon(nullptr),
     lastTimeUpdate(0),
     lastNotificationCount(0),
-	eventEnableTimer(nullptr)
+	eventEnableTimer(nullptr),
+	lvMainBatteryLabel(nullptr),
+    lastBatteryPercentage(-1)
 {}
 
 MainScene::~MainScene() {
@@ -33,6 +35,7 @@ void MainScene::onEnter() {
     this->lvTimeLabel = ui_TimeLabel;
     this->lvWeatherIcon = ui_WeatherIcon;
     this->lvNotificationIcon = ui_NotificationIcon;
+	this->lvMainBatteryLabel = ui_MainBatteryLabel;
     
     // キャラクタークラスを初期化
     character = std::make_unique<Character>(this->lvCharacterImage);
@@ -42,6 +45,7 @@ void MainScene::onEnter() {
     updateTimeLabel();
     updateWeatherIcon();
     updateNotificationIcon();
+	updateBatteryLabel();
 
     // シーン遷移用のイベントハンドラをスクリーンに登録
 	// スクリーン自体をクリック可能（イベントを受け取れるよう）にする
@@ -84,6 +88,7 @@ void MainScene::update() {
         updateNotificationIcon();
         lastNotificationCount = notification.count;
     }
+	updateBatteryLabel();	
     
     // 4. IMUによる操作検知
 	constexpr float ACTIVITY_THRESHOLD = 1.5f; // (仮)
@@ -134,6 +139,23 @@ void MainScene::updateNotificationIcon() {
         // (カテゴリに応じて lv_img_set_src を実行するスタブ)
     } else {
         lv_obj_add_flag(lvNotificationIcon, LV_OBJ_FLAG_HIDDEN); // 非表示
+    }
+}
+
+/**
+ * @brief バッテリーラベルの更新
+ */
+void MainScene::updateBatteryLabel() {
+    // ラベルが存在しない場合は何もしない
+    if (!lvMainBatteryLabel) return;
+
+    // PowerManagerから現在のバッテリー情報を取得
+    int percentage = AlcedoPebble::getInstance().getPowerManager().getBatteryPercentage();
+    
+    // 前回と値が変わったときだけテキストを更新（描画負荷を下げるため）
+    if (percentage != lastBatteryPercentage) {
+         lv_label_set_text_fmt(lvMainBatteryLabel, "%d%%", percentage);
+         lastBatteryPercentage = percentage;
     }
 }
 

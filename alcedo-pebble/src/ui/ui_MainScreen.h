@@ -21,6 +21,7 @@ extern lv_obj_t * ui_TimeLabel;
 extern lv_obj_t * ui_WeatherIcon;
 extern lv_obj_t * ui_NotificationIcon;
 extern lv_obj_t * ui_CharacterImage;
+extern lv_obj_t * ui_MainBatteryLabel;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_Image1;
 

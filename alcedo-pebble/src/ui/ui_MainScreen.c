@@ -14,6 +14,7 @@ lv_obj_t * ui_TimeLabel = NULL;
 lv_obj_t * ui_WeatherIcon = NULL;
 lv_obj_t * ui_NotificationIcon = NULL;
 lv_obj_t * ui_CharacterImage = NULL;
+lv_obj_t * ui_MainBatteryLabel = NULL;
 // event funtions
 
 // build funtions
@@ -56,8 +57,8 @@ void ui_MainScreen_screen_init(void)
     lv_img_set_src(ui_WeatherIcon, &ui_img_wether_png);
     lv_obj_set_width(ui_WeatherIcon, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_WeatherIcon, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_WeatherIcon, -50);
-    lv_obj_set_y(ui_WeatherIcon, -19);
+    lv_obj_set_x(ui_WeatherIcon, -66);
+    lv_obj_set_y(ui_WeatherIcon, 3);
     lv_obj_set_align(ui_WeatherIcon, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WeatherIcon, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_WeatherIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -85,6 +86,13 @@ void ui_MainScreen_screen_init(void)
     lv_obj_clear_flag(ui_CharacterImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_img_set_zoom(ui_CharacterImage, 30);
 
+    ui_MainBatteryLabel = lv_label_create(ui_MainScreen);
+    lv_obj_set_width(ui_MainBatteryLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_MainBatteryLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_MainBatteryLabel, -29);
+    lv_obj_set_y(ui_MainBatteryLabel, 90);
+    lv_obj_set_align(ui_MainBatteryLabel, LV_ALIGN_CENTER);
+
     uic_Image1 = ui_Image1;
 
 }
@@ -103,5 +111,6 @@ void ui_MainScreen_screen_destroy(void)
     ui_WeatherIcon = NULL;
     ui_NotificationIcon = NULL;
     ui_CharacterImage = NULL;
+    ui_MainBatteryLabel = NULL;
 
 }

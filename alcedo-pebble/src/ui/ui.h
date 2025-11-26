@@ -32,7 +32,7 @@ extern "C" {
 #include "ui_MainScreen.h"
 #include "ui_MenuScreen.h"
 #include "ui_QrScreen.h"
-#include "ui_Screen3.h"
+#include "ui_SettingScreen.h"
 
 ///////////////////// VARIABLES ////////////////////
 

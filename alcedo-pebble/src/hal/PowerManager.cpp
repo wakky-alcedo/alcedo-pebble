@@ -5,7 +5,7 @@ PowerManager::PowerManager() :
     hwManager(nullptr),
     isIdleMode(false), 
     lastActivityTime(0),
-    currentVoltage(0.0f),
+    currentVoltage(-1.0f),
     currentPercentage(0)
 {}
 
@@ -23,14 +23,19 @@ void PowerManager::update() {
     unsigned long now = millis();
 
     // 1. バッテリー電圧の監視 (10秒ごとなど)
-    if (now % 10000 < 20) { // (簡易的な10秒ごと処理)
+    if (now % 10000 < 20) { // (簡易的な10秒ごとに20回処理)
         if (hwManager) {
             uint16_t adcValue = hwManager->readBatteryAdc();
-            float measuredVoltage = (adcValue / 4095.0f) * 3.3f * 2.0f; // (仮の計算式)
-            currentVoltage = currentVoltage * 0.9f + measuredVoltage * 0.1f;
+			float measuredVoltage = 3.3 / (1<<12) * 3 * adcValue; // ref: datasheet, 分圧比3倍
+			if (currentVoltage < 0) {
+				currentVoltage = measuredVoltage; // 初回はそのまま
+			} else {
+            	currentVoltage = currentVoltage * 0.9f + measuredVoltage * 0.1f; // ローパスフィルタ
+            }
             currentPercentage = (int)((currentVoltage - 3.2f) / (4.2f - 3.2f) * 100.0f);
             if (currentPercentage > 100) currentPercentage = 100;
             if (currentPercentage < 0) currentPercentage = 0;
+			// Serial0.printf("Battery Voltage: %.2f V, Percentage: %d%%\n", currentVoltage, currentPercentage);
         }
     }
 
