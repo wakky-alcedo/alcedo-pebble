@@ -27,3 +27,12 @@ Vec2D Vec2D::normalized() const {
     float l = length(); 
     return (l > 0) ? Vec2D(x / l, y / l) : Vec2D(0, 0); 
 }
+
+/**
+ * @brief 内積を計算します。
+ * @param other もう一方のベクトル
+ * @return 内積の値
+ */
+float Vec2D::dot(const Vec2D& other) const {
+	return x * other.x + y * other.y;
+}

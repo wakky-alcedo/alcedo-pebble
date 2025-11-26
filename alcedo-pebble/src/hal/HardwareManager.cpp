@@ -3,13 +3,20 @@
 #include "main.h"
 
 // ピン定義
-#define VIBRATE_PIN 21
+// バッテリーADCピン
 #define BATT_ADC_PIN 1
 
+// IMUセンサーI2Cピン定義
+#define SENSOR_I2C Wire
 #define SENSOR_SDA 6
 #define SENSOR_SCL 7
 #define SENSOR_INT1 4
 #define SENSOR_INT2 3
+
+// バイブレーションモーターI2Cピン定義
+#define VIBE_I2C Wire1
+#define VIBRATE_SDA 15
+#define VIBRATE_SCL 16
 
 HardwareManager::HardwareManager() {}
 HardwareManager::~HardwareManager() {}
@@ -18,11 +25,22 @@ void HardwareManager::init() {
     Serial0.println("HardwareManager init...");
 
     // バイブモーターピン設定
-    pinMode(VIBRATE_PIN, OUTPUT);
-    digitalWrite(VIBRATE_PIN, LOW);
+    VIBE_I2C.begin(VIBRATE_SDA, VIBRATE_SCL);
+	if (vibeMotor.begin(&VIBE_I2C)) {
+		Serial0.println("Found DRV2605");
+	} else {
+		Serial0.println("Failed to find DRV2605");
+		while (1);
+	}
+	vibeMotor.useLRA(); // LRAモーターを使用
+	vibeMotor.selectLibrary(1); // ライブラリ1を選択
+	vibeMotor.init(); // 初期化
+	vibeMotor.setMode(DRV2605_MODE_INTTRIG); // 内部トリガーモード
+
+	// --------------------------------------------------------------------------------
 
     // IMU (QMI8658) の初期化 (スタブ)
-    bool ret = imuSensor.begin(Wire, QMI8658_L_SLAVE_ADDRESS, SENSOR_SDA, SENSOR_SCL);
+    bool ret = imuSensor.begin(SENSOR_I2C, QMI8658_L_SLAVE_ADDRESS, SENSOR_SDA, SENSOR_SCL);
     if (!ret) {
         Serial0.println("Failed to find QMI8658 - check your wiring!");
         while (1) {
@@ -124,6 +142,8 @@ void HardwareManager::init() {
     imuSensor.enableINT(SensorQMI8658::INTERRUPT_PIN_1, true);
     imuSensor.enableINT(SensorQMI8658::INTERRUPT_PIN_2, false);
 #endif
+
+	// --------------------------------------------------------------------------------
     
     // バッテリーADCピン設定
     pinMode(BATT_ADC_PIN, INPUT);
@@ -166,11 +186,15 @@ void HardwareManager::update() {
 	}
 }
 
-void HardwareManager::vibrate(int ms) {
-    digitalWrite(VIBRATE_PIN, HIGH);
-    // (vTaskDelayやタイマーで非同期にOFFにするのが望ましい)
-    delay(ms); // (注意: delay() はloop全体を停止させます)
-    digitalWrite(VIBRATE_PIN, LOW);
+/**
+ * @brief バイブレーションを実行する
+ * @param effect 効果音の番号 (DRV2605の効果音ライブラリに準拠)
+ */
+void HardwareManager::vibrate(uint8_t effect) {
+    vibeMotor.setWaveform(0, effect);  // set the effect to play
+    vibeMotor.setWaveform(1, 0);       // end waveform sequence
+
+    vibeMotor.go(); // play the effect!
 }
 
 ImuData HardwareManager::getImuData() {

@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <Arduino.h> 
 #include "SensorQMI8658.hpp"
+#include "Adafruit_DRV2605.h"
 #include "main.h"
 
 // --- HardwareManagerクラス ---
@@ -14,7 +15,10 @@ public:
     void init(); // センサーの初期化
     void update(); // センサー値のポーリング
 
-    void vibrate(int ms);
+	// バイブレーション制御
+    void vibrate(uint8_t effect);
+
+	// IMU
     ImuData getImuData();
     float getAccelX(); // 簡易アクセサ
     float getAccelY(); // 簡易アクセサ
@@ -25,5 +29,6 @@ public:
 private:
     ImuData currentImu;
     // (IMUライブラリのインスタンスなど)
-    SensorQMI8658 imuSensor; 
+    SensorQMI8658 imuSensor; // QMI8658センサ
+	Adafruit_DRV2605 vibeMotor; // バイブレーションモータ
 };

@@ -10,4 +10,5 @@ public:
     Vec2D operator*(float scalar) const;
     float length() const;
     Vec2D normalized() const;
+	float dot(const Vec2D& other) const;
 };

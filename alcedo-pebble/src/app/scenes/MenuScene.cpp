@@ -81,7 +81,15 @@ void MenuScene::update() {
     Vec2D gravity = Vec2D(imu.accelX * gravityStrength, imu.accelY * gravityStrength);
 
     // 3. 物理エンジンを更新
-    physicsEngine.update(pebbles, gravity, containerCenter, containerRadius, dt);
+    if (physicsEngine.update(pebbles, gravity, containerCenter, containerRadius, dt)) {
+		// 壁に衝突した場合
+		static unsigned long lastVib = 0;
+		// 連続振動を防ぐため，前回の振動から150ms以上経過している場合のみ振動
+		if (millis() - lastVib > 150) { 
+			hw.vibrate(24); // Sharp Tick 1 - 100%
+			lastVib = millis();
+		}
+	}
 
     // 4. 物理演算の結果をLVGLのUIオブジェクトに同期
     for (auto& pebble : pebbles) {

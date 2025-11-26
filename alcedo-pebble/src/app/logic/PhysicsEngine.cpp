@@ -47,9 +47,11 @@ void Pebble::integrate(float dt) {
  * @param gravity 重力ベクトル
  * @param containerCenter コンテナの中心位置
  * @param containerRadius コンテナの半径
+ * @param dt 時間ステップ
+ * @return コンテナ制約が適用されたかどうか(衝突したかどうか)
  */
-void PhysicsEngine::update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, Vec2D containerCenter, float containerRadius, float dt) {
-    if (pebbles.empty() || dt == 0) return;
+bool PhysicsEngine::update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, Vec2D containerCenter, float containerRadius, float dt) {
+    if (pebbles.empty() || dt == 0) return false;
 
     for (auto& pebble : pebbles) {
         pebble->accel = pebble->accel + gravity;
@@ -58,11 +60,13 @@ void PhysicsEngine::update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D 
         pebble->integrate(dt);
     }
 
-    const int substeps = 4; 
+    const int substeps = 4; // 衝突解決のサブステップ数
+	bool collided = false;
     for (int i = 0; i < substeps; ++i) {
         solveCollisions(pebbles);
-        applyContainerConstraints(pebbles, containerCenter, containerRadius);
+        collided = applyContainerConstraints(pebbles, containerCenter, containerRadius) || collided;
     }
+    return collided;
 }
 
 /**
@@ -92,16 +96,42 @@ void PhysicsEngine::solveCollisions(std::vector<std::unique_ptr<Pebble>>& pebble
  * @brief Pebbleがコンテナの境界内に収まるように制約を適用します。
  * @param pebbles 小石オブジェクトのリスト
  * @param containerCenter コンテナの中心位置
+ * 
+ * @return コンテナ制約が適用されたかどうか(衝突したかどうか)
  */
-void PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D containerCenter, float containerRadius) {
-    for (auto& pebblePtr : pebbles) {
-        Pebble& pebble = *pebblePtr;
-        Vec2D toPebble = pebble.pos - containerCenter;
+bool PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D containerCenter, float containerRadius) {
+    bool hardCollision = false; // 強い衝突があったか
+
+    for (auto& p : pebbles) {
+        Vec2D toPebble = p->pos - containerCenter;
         float dist = toPebble.length();
-        float maxDist = containerRadius - pebble.radius;
+        float maxDist = containerRadius - p->radius; 
+
         if (dist > maxDist) {
-            Vec2D correction = toPebble.normalized() * (maxDist - dist);
-            pebble.pos = pebble.pos + correction;
+            // 壁に接触している
+
+            // 1. 衝撃の強さを計算する
+            // 速度ベクトル (現在の移動量)
+            Vec2D velocity = p->pos - p->oldPos;
+            // 壁の法線ベクトル (中心から外向き)
+            Vec2D normal = toPebble.normalized();
+            
+            // 速度と法線の内積をとる (壁に向かう速度成分)
+            float impact = velocity.dot(normal);
+
+            // 2. 閾値判定
+            // impact > 0 : 壁に向かって動いている
+            // impact > threshold : 一定以上の勢いでぶつかった
+            if (impact > 0.1f) {
+                hardCollision = true;
+            }
+
+            // 3. 位置補正 (押し出し)
+            Vec2D correction = normal * (maxDist - dist);
+            p->pos = p->pos + correction;
+            
+            // (オプション: 反発させるならここで oldPos を操作する)
         }
     }
+    return hardCollision;
 }

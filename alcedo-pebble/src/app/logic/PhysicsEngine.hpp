@@ -23,9 +23,9 @@ public:
 // --- PhysicsEngineクラス ---
 class PhysicsEngine {
 public:
-    void update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, Vec2D containerCenter, float containerRadius, float dt);
+    bool update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, Vec2D containerCenter, float containerRadius, float dt);
 
 private:
     void solveCollisions(std::vector<std::unique_ptr<Pebble>>& pebbles);
-    void applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D containerCenter, float containerRadius);
+    bool applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D containerCenter, float containerRadius);
 };
