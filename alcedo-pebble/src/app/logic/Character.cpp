@@ -80,6 +80,6 @@ void Character::onTouched() {
         // lv_img_set_src(lvCharacterImage, &img_char_touched);
         
         // 振動（HardwareManager呼び出し）
-        AlcedoPebble::getInstance().getHardwareManager().vibrate(30);
+        AlcedoPebble::getInstance().getHardwareManager().vibrate(12); // Triple Click - 100%
     }
 }

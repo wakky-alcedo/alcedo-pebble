@@ -7,10 +7,6 @@
 AlcedoPebble& pebble = AlcedoPebble::getInstance();
 
 void setup() {
-#ifdef ARDUINO_ARCH_ESP32
-    Serial0.begin(115200);
-#endif
-
     // --- 初期化処理 ---
 	pebble.init();
 }

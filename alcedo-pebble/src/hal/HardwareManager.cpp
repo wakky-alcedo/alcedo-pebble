@@ -30,7 +30,7 @@ void HardwareManager::init() {
 		Serial0.println("Found DRV2605");
 	} else {
 		Serial0.println("Failed to find DRV2605");
-		while (1);
+		// while (1);
 	}
 	vibeMotor.useLRA(); // LRAモーターを使用
 	vibeMotor.selectLibrary(1); // ライブラリ1を選択

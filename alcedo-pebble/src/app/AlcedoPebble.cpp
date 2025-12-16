@@ -17,7 +17,11 @@ AlcedoPebble::~AlcedoPebble() {
 }
 
 void AlcedoPebble::init() {
+	
+#ifdef ARDUINO_ARCH_ESP32
+    Serial0.begin(115200);
 	Serial0.println("AlcedoPebble init...");
+#endif
 
     // 初期化は順序が重要
     
