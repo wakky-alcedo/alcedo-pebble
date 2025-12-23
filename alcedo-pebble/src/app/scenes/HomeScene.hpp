@@ -17,8 +17,8 @@ public:
 
 private:
     std::unique_ptr<Character> character;
-    // std::unique_ptr<PhysicsEngine> physics;
-	PhysicsEngine physicsEngine;
+    std::unique_ptr<PhysicsEngine> physicsEngine;
+	// PhysicsEngine physicsEngine;
     std::vector<std::unique_ptr<Pebble>> pebbles;
     
 	Vec2D containerCenter = Vec2D(0, 0); // todo 本来configに入れるべき

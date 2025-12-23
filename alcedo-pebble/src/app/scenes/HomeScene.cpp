@@ -61,46 +61,31 @@ void HomeScene::onEnter() {
     }
 
     // 4. 物理エンジン初期化
-    // physics = std::make_unique<PhysicsEngine>(120.0f);
+    physicsEngine = std::make_unique<PhysicsEngine>(120.0f);
     
     // 1. 物理演算用のPebbleオブジェクトを生成
     pebbles.clear(); 
     float radius = 30.0f; // pebbleの半径
-    pebbles.push_back(std::make_unique<Pebble>(Vec2D(120, 80), radius, 0)); // ID 0: QR
-    pebbles.push_back(std::make_unique<Pebble>(Vec2D(80, 150), radius, 1)); // ID 1: Game
-    pebbles.push_back(std::make_unique<Pebble>(Vec2D(160, 150), radius, 2)); // ID 2: Settings
-
-    // 2. PebbleオブジェクトとLVGLのUIオブジェクトを紐付け
-    // (ui_PebbleIconQR などは ui.h で宣言されているグローバル変数を代入)
-    if (ui_PebbleIconQR) {
-        pebbles[0]->lvglObject = ui_PebbleIconQR;
-        lv_obj_add_event_cb(ui_PebbleIconQR, pebble_event_cb, LV_EVENT_CLICKED, this);
-        lv_obj_add_flag(ui_PebbleIconQR, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_clear_flag(ui_PebbleIconQR, LV_OBJ_FLAG_GESTURE_BUBBLE);
+	if (ui_PebbleIconQR) {
+        pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconQR, Vec2D(120, 80), radius));
     }
     if (ui_PebbleIconGame) {
-        pebbles[1]->lvglObject = ui_PebbleIconGame;
-        lv_obj_add_event_cb(ui_PebbleIconGame, pebble_event_cb, LV_EVENT_CLICKED, this);
-        lv_obj_add_flag(ui_PebbleIconGame, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_clear_flag(ui_PebbleIconGame, LV_OBJ_FLAG_GESTURE_BUBBLE);
+        pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconGame, Vec2D(80, 150), radius));
     }
     if (ui_PebbleIconSettings) {
-        pebbles[2]->lvglObject = ui_PebbleIconSettings;
-        lv_obj_add_event_cb(ui_PebbleIconSettings, pebble_event_cb, LV_EVENT_CLICKED, this);
-        lv_obj_add_flag(ui_PebbleIconSettings, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_clear_flag(ui_PebbleIconSettings, LV_OBJ_FLAG_GESTURE_BUBBLE);
+        pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconSettings, Vec2D(160, 150), radius));
     }
 
-    // イベント登録 & 初期位置合わせ
+    // 2. イベント登録 & 初期位置合わせ
     for (auto& p : pebbles) {
         // ★重要: 初期位置を強制的に適用
-        p->syncLvglObject();
+        p->syncObj();
 
-        if (p->lvglObject) {
-            lv_obj_add_event_cb(p->lvglObject, pebble_event_cb, LV_EVENT_CLICKED, p.get());
-            lv_obj_add_flag(p->lvglObject, LV_OBJ_FLAG_CLICKABLE);
+        if (p->getObj()) {
+            lv_obj_add_event_cb(p->getObj(), pebble_event_cb, LV_EVENT_CLICKED, p.get());
+            lv_obj_add_flag(p->getObj(), LV_OBJ_FLAG_CLICKABLE);
             // ジェスチャーバブルを無効化 (小石操作で画面スクロールさせない)
-            lv_obj_clear_flag(p->lvglObject, LV_OBJ_FLAG_GESTURE_BUBBLE);
+            lv_obj_clear_flag(p->getObj(), LV_OBJ_FLAG_GESTURE_BUBBLE);
         }
     }
 }
@@ -140,7 +125,7 @@ void HomeScene::update() {
 		Vec2D gravity = Vec2D(imuData.accelX * gravityStrength, imuData.accelY * gravityStrength);
 
 		// 3. 物理エンジンを更新
-		if (physicsEngine.update(pebbles, gravity, containerCenter, containerRadius, dt)) {
+		if (physicsEngine->update(pebbles, gravity, dt)) {
 			// 壁に衝突した場合
 			static unsigned long lastVib = 0;
 			// 連続振動を防ぐため，前回の振動から150ms以上経過している場合のみ振動
@@ -152,7 +137,7 @@ void HomeScene::update() {
 
 		// 4. 物理演算の結果をLVGLのUIオブジェクトに同期
 		for (auto& pebble : pebbles) {
-			pebble->syncLvglObject();
+			pebble->syncObj();
 		}
     }
     
@@ -224,9 +209,9 @@ void HomeScene::pebble_event_cb(lv_event_t* e) {
         lv_event_stop_bubbling(e);
         AlcedoPebble::getInstance().getHardwareManager().vibrate(24); // Sharp Tick
         
-        if (pebble->lvglObject == ui_PebbleIconQR) {
+        if (pebble->getObj() == ui_PebbleIconQR) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<QrScene>();
-        } else if (pebble->lvglObject == ui_PebbleIconSettings) {
+        } else if (pebble->getObj() == ui_PebbleIconSettings) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<SettingsScene>();
         }
     }

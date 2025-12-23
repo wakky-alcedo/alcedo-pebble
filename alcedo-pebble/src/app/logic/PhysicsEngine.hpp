@@ -11,26 +11,38 @@
 // --- Pebbleクラス ---
 class Pebble {
 public:
-    Pebble(Vec2D startPos, float radius, int id);
+    // コンストラクタ
+    Pebble(lv_obj_t* obj, Vec2D startPos, float radius);
 
-    Vec2D pos;     // 現在の位置
+    Vec2D pos;     // 現在の位置 (中心原点)
     Vec2D oldPos;  // 1フレーム前の位置
-    Vec2D accel;   // 現在フレームでかかる加速度
-    float radius;  // 小石の半径
-    int id;        // どの機能かを識別するID
-    
-    lv_obj_t* lvglObject; // この小石に対応するLVGLのUIオブジェクト
+    Vec2D accel;   // 加速度
+    float radius;  // 半径
+    bool isDragging;
 
-    void syncLvglObject();
+    void syncObj();
     void integrate(float dt);
+	lv_obj_t* getObj() const { return obj; }
+
+private:
+	lv_obj_t* obj; // 対応するLVGLオブジェクト
 };
+
 
 // --- PhysicsEngineクラス ---
 class PhysicsEngine {
 public:
-    bool update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, Vec2D containerCenter, float containerRadius, float dt);
+    PhysicsEngine(float containerRadius);
+    ~PhysicsEngine();
+
+    bool update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity, float dt);
 
 private:
+    float containerRadius;
+    float dtSq;
+    
+    void applyGravity(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity);
+    void integrate(std::vector<std::unique_ptr<Pebble>>& pebbles, float dt);
     void solveCollisions(std::vector<std::unique_ptr<Pebble>>& pebbles);
-    bool applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D containerCenter, float containerRadius);
+    bool applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles);
 };
