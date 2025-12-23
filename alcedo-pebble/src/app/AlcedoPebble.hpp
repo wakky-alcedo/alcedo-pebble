@@ -1,8 +1,6 @@
 #pragma once
 
-// すべてのマネージャヘッダをインクルード
 #include "main.h"
-
 #include "hal/DisplayManager.hpp"
 #include "hal/HardwareManager.hpp"
 #include "hal/PowerManager.hpp"
@@ -13,27 +11,24 @@
 class AlcedoPebble {
 public:
     static AlcedoPebble& getInstance() {
-        static AlcedoPebble instance; 
+        static AlcedoPebble instance;
         return instance;
     }
-    AlcedoPebble(const AlcedoPebble&) = delete;
-    AlcedoPebble& operator=(const AlcedoPebble&) = delete;
-    AlcedoPebble(AlcedoPebble&&) = delete;
-    AlcedoPebble& operator=(AlcedoPebble&&) = delete;
 
     void init();
     void loop();
 
-    // 各マネージャへのアクセサ
-    DisplayManager& getDisplayManager();
-    HardwareManager& getHardwareManager();
-    PowerManager& getPowerManager();
-    BleManager& getBleManager();
-    SceneManager& getSceneManager();
+    DisplayManager& getDisplayManager() { return *displayManager; }
+    HardwareManager& getHardwareManager() { return *hardwareManager; }
+    PowerManager& getPowerManager() { return *powerManager; }
+    BleManager& getBleManager() { return *bleManager; }
+    SceneManager& getSceneManager() { return *sceneManager; }
 
 private:
     AlcedoPebble();
     ~AlcedoPebble();
+    AlcedoPebble(const AlcedoPebble&) = delete;
+    AlcedoPebble& operator=(const AlcedoPebble&) = delete;
 
     std::unique_ptr<DisplayManager> displayManager;
     std::unique_ptr<HardwareManager> hardwareManager;

@@ -61,22 +61,5 @@ void AlcedoPebble::loop() {
     // 5. ディスプレイ（LVGL）の描画処理
     // (※必ず全てのロジックの最後に呼ぶ)
     displayManager->update();
-}
-
-// --- アクセサ（Getter）の実装 ---
-
-DisplayManager& AlcedoPebble::getDisplayManager() {
-    return *displayManager;
-}
-HardwareManager& AlcedoPebble::getHardwareManager() {
-    return *hardwareManager;
-}
-PowerManager& AlcedoPebble::getPowerManager() {
-    return *powerManager;
-}
-BleManager& AlcedoPebble::getBleManager() {
-    return *bleManager;
-}
-SceneManager& AlcedoPebble::getSceneManager() {
-    return *sceneManager;
+    delay(5);
 }
