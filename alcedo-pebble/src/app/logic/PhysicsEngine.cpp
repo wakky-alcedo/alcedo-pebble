@@ -41,7 +41,7 @@ void Pebble::integrate(float dt) {
     if (isDragging) return;
 	const float damping = 0.95f;
     float dtSq = dt * dt;
-    Vec2D velocity = pos - oldPos; // 厳密には，速度*dt
+    Vec2D velocity = pos - oldPos; // 厳密には，速度/dtだけど、次の式でも*dtしていないので相殺
     Vec2D nextPos = pos + velocity * damping + accel * dtSq;
     oldPos = pos;
     pos = nextPos;
@@ -71,7 +71,7 @@ bool PhysicsEngine::update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D 
 	bool collided = false;
     for (int i = 0; i < substeps; ++i) {
         solveCollisions(pebbles);
-        collided = applyContainerConstraints(pebbles) || collided;
+        collided = applyContainerConstraints(pebbles, dt) || collided;
     }
     return collided;
 }
@@ -79,7 +79,7 @@ bool PhysicsEngine::update(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D 
 void PhysicsEngine::applyGravity(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity) {
     for (auto& pebble : pebbles) {
 		if (!pebble->isDragging) {
-			pebble->accel = pebble->accel + gravity;
+			pebble->accel = pebble->accel + gravity * 0.1f; // 質量=0.1f と仮定
         }
     }
 }
@@ -117,11 +117,10 @@ void PhysicsEngine::solveCollisions(std::vector<std::unique_ptr<Pebble>>& pebble
 /**
  * @brief Pebbleがコンテナの境界内に収まるように制約を適用します。
  * @param pebbles 小石オブジェクトのリスト
- * @param containerCenter コンテナの中心位置
- * 
+ * @param dt 時間ステップ
  * @return コンテナ制約が適用されたかどうか(衝突したかどうか)
  */
-bool PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles) {
+bool PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, float dt) {
     const Vec2D containerCenter(0.0f, 0.0f);
     bool hardCollision = false; // 強い衝突があったか
 
@@ -135,17 +134,17 @@ bool PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble
 
             // 1. 衝撃の強さを計算する
             // 速度ベクトル (現在の移動量)
-            Vec2D velocity = p->pos - p->oldPos;
+            Vec2D velocity = p->pos - p->oldPos; // 厳密には，速度/dt
             // 壁の法線ベクトル (中心から外向き)
             Vec2D normal = toPebble.normalized();
             
             // 速度と法線の内積をとる (壁に向かう速度成分)
-            float impact = velocity.dot(normal);
+            float impact = velocity.dot(normal) / dt; // 速度は位置差分なのでdtで割る
 
             // 2. 閾値判定
             // impact > 0 : 壁に向かって動いている
             // impact > threshold : 一定以上の勢いでぶつかった
-            if (impact > 0.1f) {
+            if (impact > 10.0f) {
                 hardCollision = true;
             }
 

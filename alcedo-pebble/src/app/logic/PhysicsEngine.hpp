@@ -44,5 +44,5 @@ private:
     void applyGravity(std::vector<std::unique_ptr<Pebble>>& pebbles, Vec2D gravity);
     void integrate(std::vector<std::unique_ptr<Pebble>>& pebbles, float dt);
     void solveCollisions(std::vector<std::unique_ptr<Pebble>>& pebbles);
-    bool applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles);
+    bool applyContainerConstraints(std::vector<std::unique_ptr<Pebble>>& pebbles, float dt);
 };
