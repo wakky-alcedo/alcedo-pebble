@@ -191,6 +191,7 @@ void HardwareManager::update() {
  * @param effect 効果音の番号 (DRV2605の効果音ライブラリに準拠)
  */
 void HardwareManager::vibrate(uint8_t effect) {
+	if (!vibrateEnabled) return;
     vibeMotor.setWaveform(0, effect);  // set the effect to play
     vibeMotor.setWaveform(1, 0);       // end waveform sequence
 

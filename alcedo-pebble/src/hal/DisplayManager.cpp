@@ -133,6 +133,7 @@ void DisplayManager::init() {
     disp_drv.flush_cb = display_flush; // ★ 実機専用コールバック
     disp_drv.draw_buf = &draw_buf;
     lv_disp_drv_register(&disp_drv);
+	setBrightness(30); // 初期輝度30%
 
     // 入力デバイス（タッチ）ドライバの登録
     static lv_indev_drv_t indev_drv;

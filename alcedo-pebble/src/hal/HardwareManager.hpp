@@ -17,6 +17,8 @@ public:
 
 	// バイブレーション制御
     void vibrate(uint8_t effect);
+	void setVibrateEnabled(bool enabled) { vibrateEnabled = enabled; }
+	bool isVibrateEnabled() const { return vibrateEnabled; }
 
 	// IMU
     ImuData getImuData();
@@ -31,4 +33,5 @@ private:
     // (IMUライブラリのインスタンスなど)
     SensorQMI8658 imuSensor; // QMI8658センサ
 	Adafruit_DRV2605 vibeMotor; // バイブレーションモータ
+	bool vibrateEnabled = true;
 };
