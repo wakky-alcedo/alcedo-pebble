@@ -1,3 +1,8 @@
+/**
+ * PhysicsEngine.cpp
+ * @brief 小石オブジェクトの物理シミュレーションを行うエンジンの実装ファイル
+ */
+
 #include "PhysicsEngine.hpp"
 
 // --- Pebble クラス実装 ---

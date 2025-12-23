@@ -1,3 +1,8 @@
+/**
+ * PhysicsEngine.hpp
+ * @brief 小石オブジェクトの物理シミュレーションを行うエンジンのヘッダファイル
+ */
+
 #pragma once
 
 #include "main.h"

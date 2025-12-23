@@ -3,25 +3,25 @@
 // LVGL version: 8.3.11
 // Project name: alcedo-pebble-gui
 
-#ifndef UI_SETTINGSCREEN_H
-#define UI_SETTINGSCREEN_H
+#ifndef UI_SETTINGSSCREEN_H
+#define UI_SETTINGSSCREEN_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// SCREEN: ui_SettingScreen
-extern void ui_SettingScreen_screen_init(void);
-extern void ui_SettingScreen_screen_destroy(void);
-extern lv_obj_t * ui_SettingScreen;
-extern lv_obj_t * ui_Slider1;
+// SCREEN: ui_SettingsScreen
+extern void ui_SettingsScreen_screen_init(void);
+extern void ui_SettingsScreen_screen_destroy(void);
+extern lv_obj_t * ui_SettingsScreen;
+extern lv_obj_t * ui_SettingsBrightnessSlider;
 extern lv_obj_t * ui_Label1;
-extern lv_obj_t * ui_Label2;
+extern lv_obj_t * ui_SettingsBleLabel;
 extern lv_obj_t * ui_Label3;
-extern lv_obj_t * ui_Switch1;
+extern lv_obj_t * ui_SettingsVibrateSwitch;
 extern lv_obj_t * ui_Bar1;
-extern lv_obj_t * ui_Label4;
-extern lv_obj_t * ui_Button1;
+extern lv_obj_t * ui_SettingsBatteryLabel;
+extern lv_obj_t * ui_SettingsDeepSleepButton;
 extern lv_obj_t * ui_Label5;
 extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label7;
@@ -31,6 +31,7 @@ extern lv_obj_t * ui_Button3;
 extern lv_obj_t * ui_Label8;
 extern lv_obj_t * ui_Button4;
 extern lv_obj_t * ui_Label9;
+extern lv_obj_t * ui_SettingsBackButton;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_SettingScreen;
 

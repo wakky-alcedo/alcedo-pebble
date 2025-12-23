@@ -6,15 +6,15 @@
 #include "ui.h"
 
 lv_obj_t * uic_SettingScreen;
-lv_obj_t * ui_SettingScreen = NULL;
-lv_obj_t * ui_Slider1 = NULL;
+lv_obj_t * ui_SettingsScreen = NULL;
+lv_obj_t * ui_SettingsBrightnessSlider = NULL;
 lv_obj_t * ui_Label1 = NULL;
-lv_obj_t * ui_Label2 = NULL;
+lv_obj_t * ui_SettingsBleLabel = NULL;
 lv_obj_t * ui_Label3 = NULL;
-lv_obj_t * ui_Switch1 = NULL;
+lv_obj_t * ui_SettingsVibrateSwitch = NULL;
 lv_obj_t * ui_Bar1 = NULL;
-lv_obj_t * ui_Label4 = NULL;
-lv_obj_t * ui_Button1 = NULL;
+lv_obj_t * ui_SettingsBatteryLabel = NULL;
+lv_obj_t * ui_SettingsDeepSleepButton = NULL;
 lv_obj_t * ui_Label5 = NULL;
 lv_obj_t * ui_Panel2 = NULL;
 lv_obj_t * ui_Label7 = NULL;
@@ -24,25 +24,27 @@ lv_obj_t * ui_Button3 = NULL;
 lv_obj_t * ui_Label8 = NULL;
 lv_obj_t * ui_Button4 = NULL;
 lv_obj_t * ui_Label9 = NULL;
+lv_obj_t * ui_SettingsBackButton = NULL;
 // event funtions
 
 // build funtions
 
-void ui_SettingScreen_screen_init(void)
+void ui_SettingsScreen_screen_init(void)
 {
-    ui_SettingScreen = lv_obj_create(NULL);
-    lv_obj_clear_flag(ui_SettingScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_SettingsScreen = lv_obj_create(NULL);
+    lv_obj_clear_flag(ui_SettingsScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_Slider1 = lv_slider_create(ui_SettingScreen);
-    lv_slider_set_value(ui_Slider1, 100, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_Slider1) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider1, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_Slider1, 108);
-    lv_obj_set_height(ui_Slider1, 10);
-    lv_obj_set_x(ui_Slider1, 49);
-    lv_obj_set_y(ui_Slider1, -34);
-    lv_obj_set_align(ui_Slider1, LV_ALIGN_CENTER);
+    ui_SettingsBrightnessSlider = lv_slider_create(ui_SettingsScreen);
+    lv_slider_set_value(ui_SettingsBrightnessSlider, 100, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_SettingsBrightnessSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_SettingsBrightnessSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_SettingsBrightnessSlider, 108);
+    lv_obj_set_height(ui_SettingsBrightnessSlider, 10);
+    lv_obj_set_x(ui_SettingsBrightnessSlider, 49);
+    lv_obj_set_y(ui_SettingsBrightnessSlider, -34);
+    lv_obj_set_align(ui_SettingsBrightnessSlider, LV_ALIGN_CENTER);
 
-    ui_Label1 = lv_label_create(ui_SettingScreen);
+    ui_Label1 = lv_label_create(ui_SettingsScreen);
     lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label1, -58);
@@ -50,15 +52,15 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_set_align(ui_Label1, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label1, "Brightness");
 
-    ui_Label2 = lv_label_create(ui_SettingScreen);
-    lv_obj_set_width(ui_Label2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_Label2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label2, -5);
-    lv_obj_set_y(ui_Label2, 66);
-    lv_obj_set_align(ui_Label2, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_Label2, "Connection BLE / WiFi");
+    ui_SettingsBleLabel = lv_label_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_SettingsBleLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SettingsBleLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SettingsBleLabel, -5);
+    lv_obj_set_y(ui_SettingsBleLabel, 66);
+    lv_obj_set_align(ui_SettingsBleLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_SettingsBleLabel, "Connection BLE / WiFi");
 
-    ui_Label3 = lv_label_create(ui_SettingScreen);
+    ui_Label3 = lv_label_create(ui_SettingsScreen);
     lv_obj_set_width(ui_Label3, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label3, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label3, -32);
@@ -66,15 +68,15 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_set_align(ui_Label3, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label3, "Vibration");
 
-    ui_Switch1 = lv_switch_create(ui_SettingScreen);
-    lv_obj_set_width(ui_Switch1, 42);
-    lv_obj_set_height(ui_Switch1, 20);
-    lv_obj_set_x(ui_Switch1, 42);
-    lv_obj_set_y(ui_Switch1, -72);
-    lv_obj_set_align(ui_Switch1, LV_ALIGN_CENTER);
-    lv_obj_add_state(ui_Switch1, LV_STATE_CHECKED);       /// States
+    ui_SettingsVibrateSwitch = lv_switch_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_SettingsVibrateSwitch, 42);
+    lv_obj_set_height(ui_SettingsVibrateSwitch, 20);
+    lv_obj_set_x(ui_SettingsVibrateSwitch, 42);
+    lv_obj_set_y(ui_SettingsVibrateSwitch, -72);
+    lv_obj_set_align(ui_SettingsVibrateSwitch, LV_ALIGN_CENTER);
+    lv_obj_add_state(ui_SettingsVibrateSwitch, LV_STATE_CHECKED);       /// States
 
-    ui_Bar1 = lv_bar_create(ui_SettingScreen);
+    ui_Bar1 = lv_bar_create(ui_SettingsScreen);
     lv_bar_set_value(ui_Bar1, 25, LV_ANIM_OFF);
     lv_bar_set_start_value(ui_Bar1, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_Bar1, 99);
@@ -83,24 +85,24 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_set_y(ui_Bar1, -1);
     lv_obj_set_align(ui_Bar1, LV_ALIGN_CENTER);
 
-    ui_Label4 = lv_label_create(ui_SettingScreen);
-    lv_obj_set_width(ui_Label4, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_Label4, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label4, -63);
-    lv_obj_set_y(ui_Label4, 0);
-    lv_obj_set_align(ui_Label4, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_Label4, "Battery 100%");
+    ui_SettingsBatteryLabel = lv_label_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_SettingsBatteryLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SettingsBatteryLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_SettingsBatteryLabel, -63);
+    lv_obj_set_y(ui_SettingsBatteryLabel, 0);
+    lv_obj_set_align(ui_SettingsBatteryLabel, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_SettingsBatteryLabel, "Battery 100%");
 
-    ui_Button1 = lv_btn_create(ui_SettingScreen);
-    lv_obj_set_width(ui_Button1, 35);
-    lv_obj_set_height(ui_Button1, 22);
-    lv_obj_set_x(ui_Button1, 35);
-    lv_obj_set_y(ui_Button1, 33);
-    lv_obj_set_align(ui_Button1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Button1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_clear_flag(ui_Button1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_SettingsDeepSleepButton = lv_btn_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_SettingsDeepSleepButton, 35);
+    lv_obj_set_height(ui_SettingsDeepSleepButton, 22);
+    lv_obj_set_x(ui_SettingsDeepSleepButton, 35);
+    lv_obj_set_y(ui_SettingsDeepSleepButton, 33);
+    lv_obj_set_align(ui_SettingsDeepSleepButton, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_SettingsDeepSleepButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_SettingsDeepSleepButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_Label5 = lv_label_create(ui_SettingScreen);
+    ui_Label5 = lv_label_create(ui_SettingsScreen);
     lv_obj_set_width(ui_Label5, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label5, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label5, -57);
@@ -108,7 +110,7 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_set_align(ui_Label5, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label5, "DeepSleep");
 
-    ui_Panel2 = lv_obj_create(ui_SettingScreen);
+    ui_Panel2 = lv_obj_create(ui_SettingsScreen);
     lv_obj_set_width(ui_Panel2, 237);
     lv_obj_set_height(ui_Panel2, 118);
     lv_obj_set_align(ui_Panel2, LV_ALIGN_CENTER);
@@ -168,25 +170,34 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_set_align(ui_Label9, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label9, "Yes");
 
-    uic_SettingScreen = ui_SettingScreen;
+    ui_SettingsBackButton = lv_btn_create(ui_SettingsScreen);
+    lv_obj_set_width(ui_SettingsBackButton, 76);
+    lv_obj_set_height(ui_SettingsBackButton, 20);
+    lv_obj_set_x(ui_SettingsBackButton, -1);
+    lv_obj_set_y(ui_SettingsBackButton, 102);
+    lv_obj_set_align(ui_SettingsBackButton, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_SettingsBackButton, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_SettingsBackButton, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    uic_SettingScreen = ui_SettingsScreen;
 
 }
 
-void ui_SettingScreen_screen_destroy(void)
+void ui_SettingsScreen_screen_destroy(void)
 {
-    if(ui_SettingScreen) lv_obj_del(ui_SettingScreen);
+    if(ui_SettingsScreen) lv_obj_del(ui_SettingsScreen);
 
     // NULL screen variables
     uic_SettingScreen = NULL;
-    ui_SettingScreen = NULL;
-    ui_Slider1 = NULL;
+    ui_SettingsScreen = NULL;
+    ui_SettingsBrightnessSlider = NULL;
     ui_Label1 = NULL;
-    ui_Label2 = NULL;
+    ui_SettingsBleLabel = NULL;
     ui_Label3 = NULL;
-    ui_Switch1 = NULL;
+    ui_SettingsVibrateSwitch = NULL;
     ui_Bar1 = NULL;
-    ui_Label4 = NULL;
-    ui_Button1 = NULL;
+    ui_SettingsBatteryLabel = NULL;
+    ui_SettingsDeepSleepButton = NULL;
     ui_Label5 = NULL;
     ui_Panel2 = NULL;
     ui_Label7 = NULL;
@@ -196,5 +207,6 @@ void ui_SettingScreen_screen_destroy(void)
     ui_Label8 = NULL;
     ui_Button4 = NULL;
     ui_Label9 = NULL;
+    ui_SettingsBackButton = NULL;
 
 }

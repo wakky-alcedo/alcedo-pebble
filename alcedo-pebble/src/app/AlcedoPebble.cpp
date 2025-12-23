@@ -1,7 +1,5 @@
-#include "scenes/MainScene.hpp" // 最初のシーンとして指定
-#include "AlcedoPebble.hpp"
-
-// --- AlcedoPebble ---
+#include "app/AlcedoPebble.hpp"
+#include "app/scenes/HomeScene.hpp"
 
 AlcedoPebble::AlcedoPebble() {
     // コンストラクタでマネージャクラスを生成
@@ -38,9 +36,8 @@ void AlcedoPebble::init() {
     // 4. BLE
     bleManager->init();
 
-    // 5. 最初のシーンを設定
-    // (※注: この時点で MainScene が最初のシーンとして起動する)
-    sceneManager->changeScene<MainScene>();
+    // 最初のシーンを HomeScene (統合版) にする
+    sceneManager->changeScene<HomeScene>();
 
 	Serial0.println("AlcedoPebble init complete.");
 }
