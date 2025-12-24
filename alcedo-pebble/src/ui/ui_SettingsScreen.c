@@ -12,7 +12,7 @@ lv_obj_t * ui_Label1 = NULL;
 lv_obj_t * ui_SettingsBleLabel = NULL;
 lv_obj_t * ui_Label3 = NULL;
 lv_obj_t * ui_SettingsVibrateSwitch = NULL;
-lv_obj_t * ui_Bar1 = NULL;
+lv_obj_t * ui_SettingsBatteryBar = NULL;
 lv_obj_t * ui_SettingsBatteryLabel = NULL;
 lv_obj_t * ui_SettingsDeepSleepButton = NULL;
 lv_obj_t * ui_Label5 = NULL;
@@ -76,14 +76,14 @@ void ui_SettingsScreen_screen_init(void)
     lv_obj_set_align(ui_SettingsVibrateSwitch, LV_ALIGN_CENTER);
     lv_obj_add_state(ui_SettingsVibrateSwitch, LV_STATE_CHECKED);       /// States
 
-    ui_Bar1 = lv_bar_create(ui_SettingsScreen);
-    lv_bar_set_value(ui_Bar1, 25, LV_ANIM_OFF);
-    lv_bar_set_start_value(ui_Bar1, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_Bar1, 99);
-    lv_obj_set_height(ui_Bar1, 10);
-    lv_obj_set_x(ui_Bar1, 51);
-    lv_obj_set_y(ui_Bar1, -1);
-    lv_obj_set_align(ui_Bar1, LV_ALIGN_CENTER);
+    ui_SettingsBatteryBar = lv_bar_create(ui_SettingsScreen);
+    lv_bar_set_value(ui_SettingsBatteryBar, 25, LV_ANIM_OFF);
+    lv_bar_set_start_value(ui_SettingsBatteryBar, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_SettingsBatteryBar, 99);
+    lv_obj_set_height(ui_SettingsBatteryBar, 10);
+    lv_obj_set_x(ui_SettingsBatteryBar, 51);
+    lv_obj_set_y(ui_SettingsBatteryBar, -1);
+    lv_obj_set_align(ui_SettingsBatteryBar, LV_ALIGN_CENTER);
 
     ui_SettingsBatteryLabel = lv_label_create(ui_SettingsScreen);
     lv_obj_set_width(ui_SettingsBatteryLabel, LV_SIZE_CONTENT);   /// 1
@@ -195,7 +195,7 @@ void ui_SettingsScreen_screen_destroy(void)
     ui_SettingsBleLabel = NULL;
     ui_Label3 = NULL;
     ui_SettingsVibrateSwitch = NULL;
-    ui_Bar1 = NULL;
+    ui_SettingsBatteryBar = NULL;
     ui_SettingsBatteryLabel = NULL;
     ui_SettingsDeepSleepButton = NULL;
     ui_Label5 = NULL;

@@ -19,7 +19,7 @@ extern lv_obj_t * ui_Label1;
 extern lv_obj_t * ui_SettingsBleLabel;
 extern lv_obj_t * ui_Label3;
 extern lv_obj_t * ui_SettingsVibrateSwitch;
-extern lv_obj_t * ui_Bar1;
+extern lv_obj_t * ui_SettingsBatteryBar;
 extern lv_obj_t * ui_SettingsBatteryLabel;
 extern lv_obj_t * ui_SettingsDeepSleepButton;
 extern lv_obj_t * ui_Label5;

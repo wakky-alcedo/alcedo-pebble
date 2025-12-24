@@ -38,6 +38,7 @@ void ui_init(void)
     ui_QrScreen_screen_init();
     ui_SettingsScreen_screen_init();
     ui_HomeScreen_screen_init();
+    ui_SkipScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_disp_load_scr(ui_QrScreen);
 }
@@ -47,4 +48,5 @@ void ui_destroy(void)
     ui_QrScreen_screen_destroy();
     ui_SettingsScreen_screen_destroy();
     ui_HomeScreen_screen_destroy();
+    ui_SkipScreen_screen_destroy();
 }

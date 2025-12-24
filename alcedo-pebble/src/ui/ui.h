@@ -32,6 +32,7 @@ extern "C" {
 #include "ui_QrScreen.h"
 #include "ui_SettingsScreen.h"
 #include "ui_HomeScreen.h"
+#include "ui_SkipScreen.h"
 
 ///////////////////// VARIABLES ////////////////////
 
@@ -44,7 +45,6 @@ extern lv_obj_t * ui____initial_actions0;
 LV_IMG_DECLARE(ui_img_twitter_qr_png);    // assets/Twitter_QR.png
 LV_IMG_DECLARE(ui_img_275677306);    // assets/River Scene - Morning_2x1.png
 LV_IMG_DECLARE(ui_img_1321182874);    // assets/Diagonal Perch Kingfisher (カスタム).png
-LV_IMG_DECLARE(ui_img_wether_png);    // assets/wether.png
 LV_IMG_DECLARE(ui_img_qr3_png);    // assets/qr3.png
 LV_IMG_DECLARE(ui_img_setting2_png);    // assets/setting2.png
 

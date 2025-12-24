@@ -87,7 +87,6 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_align(ui_MainBatteryLabel, LV_ALIGN_CENTER);
 
     ui_WeatherIcon = lv_img_create(ui_PageMain);
-    lv_img_set_src(ui_WeatherIcon, &ui_img_wether_png);
     lv_obj_set_width(ui_WeatherIcon, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_WeatherIcon, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_WeatherIcon, -66);
@@ -100,8 +99,8 @@ void ui_HomeScreen_screen_init(void)
     ui_TimeLabel = lv_label_create(ui_PageMain);
     lv_obj_set_width(ui_TimeLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_TimeLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_TimeLabel, -52);
-    lv_obj_set_y(ui_TimeLabel, 32);
+    lv_obj_set_x(ui_TimeLabel, -47);
+    lv_obj_set_y(ui_TimeLabel, 14);
     lv_obj_set_align(ui_TimeLabel, LV_ALIGN_CENTER);
 
     ui_PageMenu = lv_obj_create(ui_ScrollContainer);
