@@ -35,7 +35,7 @@ void ui_SettingsScreen_screen_init(void)
     lv_obj_clear_flag(ui_SettingsScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_SettingsBrightnessSlider = lv_slider_create(ui_SettingsScreen);
-    lv_slider_set_value(ui_SettingsBrightnessSlider, 100, LV_ANIM_OFF);
+    lv_slider_set_value(ui_SettingsBrightnessSlider, 20, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_SettingsBrightnessSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
             ui_SettingsBrightnessSlider, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_SettingsBrightnessSlider, 108);

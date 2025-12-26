@@ -5,8 +5,8 @@
 // スイング判定結果
 struct SwingResult {
     bool detected = false;
-    float power = 0.0f;     // スイングの強さ (0.0 - 1.0)
-    float spin = 0.0f;      // 回転力 (0.0 - 1.0)
+    float power = 0.0f;     // スイングの強さ[G]]
+    float spin = 0.0f;      // 回転数[dps]
     float stability = 0.0f; // 軸の安定性 (0.0 - 1.0, 1.0がベスト)
     int estimatedSkips = 0; // 推定スキップ回数
 };

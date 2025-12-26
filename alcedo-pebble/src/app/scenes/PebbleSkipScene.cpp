@@ -4,15 +4,15 @@
 #include "ui/ui.h"
 
 PebbleSkipScene::PebbleSkipScene() {
-    Serial.println("PebbleSkipScene constructor");
+    Serial0.println("PebbleSkipScene constructor");
 }
 
 PebbleSkipScene::~PebbleSkipScene() {
-    Serial.println("PebbleSkipScene destroyed");
+    Serial0.println("PebbleSkipScene destroyed");
 }
 
 void PebbleSkipScene::onEnter() {
-    Serial.println("PebbleSkipScene onEnter");
+    Serial0.println("PebbleSkipScene onEnter");
 
     if (ui_SkipScreen) {
         lv_scr_load(ui_SkipScreen);
@@ -162,10 +162,11 @@ void PebbleSkipScene::showResult() {
     // ★修正: 詳細情報の表示
     char buf[128];
     if (skipCount == 0) {
-        sprintf(buf, "PLOP...\n(0 skips)\nPow:%.1f Stab:%.1f", resPower, resStability);
+        sprintf(buf, "PLOP...\n(0 skips)\nPow[G]:%.1f\nSpin[dps]:%.1f\nStab:%.1f", 
+				resPower, resSpin, resStability);
     } else {
         // 回転(Spin)と安定性(Stab)も表示
-        sprintf(buf, "%d SKIPS!\nPow: %.1f\nSpin: %.1f\nStab: %.1f", 
+        sprintf(buf, "%d SKIPS!\nPow[G]: %.1f\nSpin[dps]: %.1f\nStab: %.1f", 
                 skipCount, resPower, resSpin, resStability);
     }
     
@@ -174,7 +175,7 @@ void PebbleSkipScene::showResult() {
 }
 
 void PebbleSkipScene::onExit() {
-    Serial.println("PebbleSkipScene onExit");
+    Serial0.println("PebbleSkipScene onExit");
     if (ui_SkipScreen) {
         lv_obj_remove_event_cb_with_user_data(ui_SkipScreen, screen_event_cb, this);
     }

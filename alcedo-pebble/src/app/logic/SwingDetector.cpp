@@ -51,16 +51,17 @@ SwingResult SwingDetector::update(const ImuData& imu) {
             
             // 1. パワー評価 (1.5G 〜 8.0G を 0.0 〜 1.0 に)
             // ★修正: 上限を5Gから8Gに上げ、簡単に満点が出ないようにする
-            float p = (maxAccelNorm - THRESHOLD_START) / (8.0f - THRESHOLD_START);
-            if (p > 1.0f) p = 1.0f;
-            if (p < 0.0f) p = 0.0f;
-            result.power = p;
+			result.power = maxAccelNorm;
+            float power_score = (maxAccelNorm - THRESHOLD_START) / (8.0f - THRESHOLD_START);
+            if (power_score > 1.0f) power_score = 1.0f;
+            if (power_score < 0.0f) power_score = 0.0f;
 
-            // 2. 回転評価 (2000 dps を MAX とする)
+            // 2. 回転評価
             // 手首のスナップが効いているほど高評価
-            float s = maxGyroZ / 2000.0f; // QMI8658のスケール設定によるが、数千dps出る想定
-            if (s > 1.0f) s = 1.0f;
-            result.spin = s;
+			result.spin = maxGyroZ;
+			float max_spin_dps = 30.0f; // 最大回転力の基準値
+            float spin_score = maxGyroZ / max_spin_dps;
+            if (spin_score > 1.0f) spin_score = 1.0f;
 
             // 3. 安定性評価 (ブレの平均値)
             // ブレが少ないほど 1.0 に近づく
@@ -74,7 +75,7 @@ SwingResult SwingDetector::update(const ImuData& imu) {
             // パワー重視だが、回転と安定性もボーナスとして加味
             // Base: Power * 10
             // Bonus: Spin * 3 + Stability * 2
-            float rawScore = (result.power * 10.0f) + (result.spin * 3.0f) + (result.stability * 2.0f);
+            float rawScore = (power_score * 10.0f) + (spin_score * 3.0f) + (result.stability * 2.0f);
             
             // 係数を調整して 0 〜 15 くらいに収める
             result.estimatedSkips = (int)rawScore;

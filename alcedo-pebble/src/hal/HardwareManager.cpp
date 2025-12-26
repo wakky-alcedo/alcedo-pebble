@@ -210,6 +210,13 @@ void HardwareManager::vibrate(uint8_t effect) {
 }
 
 ImuData HardwareManager::getImuData() {
+	// static uint32_t lastPrintTime = 0;
+	// uint32_t now = millis();
+	// if (now - lastPrintTime > 1000) { // 1秒ごとに表示
+	// 	Serial0.println("IMU Data: AccelX=" + String(currentImu.accelX) + " AccelY=" + String(currentImu.accelY) + " AccelZ=" + String(currentImu.accelZ)
+	// 		+ " GyroX=" + String(currentImu.gyroX) + " GyroY=" + String(currentImu.gyroY) + " GyroZ=" + String(currentImu.gyroZ));
+	// 	lastPrintTime = now;
+	// }
     return currentImu;
 }
 
