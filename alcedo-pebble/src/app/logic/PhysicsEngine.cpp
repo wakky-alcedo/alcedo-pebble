@@ -144,7 +144,7 @@ bool PhysicsEngine::applyContainerConstraints(std::vector<std::unique_ptr<Pebble
             // 2. 閾値判定
             // impact > 0 : 壁に向かって動いている
             // impact > threshold : 一定以上の勢いでぶつかった
-            if (impact > 10.0f) {
+            if (impact > 30.0f) {
                 hardCollision = true;
             }
 

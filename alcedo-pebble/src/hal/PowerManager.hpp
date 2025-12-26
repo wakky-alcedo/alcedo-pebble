@@ -26,6 +26,7 @@ public:
 	BatteryData getBatteryData() const { return data; }
     void enterIdleMode();
     void exitIdleMode();
+	bool isIdle() const { return isIdleMode; }
     void enterDeepSleep();
     void notifyActivity(); // 操作を検知したら呼ぶ
 

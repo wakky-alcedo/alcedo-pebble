@@ -129,7 +129,7 @@ void HomeScene::update() {
 			// 壁に衝突した場合
 			static unsigned long lastVib = 0;
 			// 連続振動を防ぐため，前回の振動から150ms以上経過している場合のみ振動
-			if (millis() - lastVib > 150) { 
+			if (millis() - lastVib > 150 && !AlcedoPebble::getInstance().getPowerManager().isIdle()) { 
 				hw.vibrate(24); // Sharp Tick 1 - 100%
 				lastVib = millis();
 			}
