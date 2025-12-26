@@ -1,6 +1,6 @@
 #include "app/scenes/QrScene.hpp"
 #include "app/AlcedoPebble.hpp"
-#include "app/scenes/MenuScene.hpp" // メニューシーンへのヘッダ
+#include "app/scenes/HomeScene.hpp" // ★変更: 戻り先をHomeSceneに
 
 QrScene::QrScene() {
     Serial.println("03 QrScene constructor");
@@ -42,6 +42,24 @@ void QrScene::onEnter() {
     lv_timer_set_repeat_count(eventEnableTimer, 1); // 1回だけ実行
 }
 
+// ワンショットタイマーコールバック (イベント登録)
+void QrScene::enable_events_timer_cb(lv_timer_t* timer) {
+    QrScene* self = static_cast<QrScene*>(timer->user_data);
+    if (!self) {
+         Serial.println("ERROR: 03 enable_events_timer_cb self is NULL");
+         return;
+    }
+
+    self->eventEnableTimer = nullptr; // タイマー参照をクリア
+
+    if (ui_QrScreen) {
+        // スクリーン全体（背景）にクリックイベントを設定 (メニューに戻る用)
+        lv_obj_add_event_cb(ui_QrScreen, screen_event_cb, LV_EVENT_CLICKED, self);
+        Serial.println("03 CLICKED event callback added to ui_QrScreen.");
+    }
+}
+
+
 void QrScene::update() {
     // (静的なQRコードなので特に処理なし)
 }
@@ -61,26 +79,18 @@ void QrScene::onExit() {
 // 画面背景がクリックされた
 void QrScene::screen_event_cb(lv_event_t * e) {
     QrScene* self = static_cast<QrScene*>(lv_event_get_user_data(e));
-    if (self && lv_event_get_code(e) == LV_EVENT_CLICKED) {
-        Serial.println("03 Screen clicked, returning to MenuScene.");
-        AlcedoPebble::getInstance().getHardwareManager().vibrate(24); // Sharp Tick 1 - 100%
-        AlcedoPebble::getInstance().getSceneManager().changeScene<MenuScene>();
-    }
-}
-
-// ワンショットタイマーコールバック (イベント登録)
-void QrScene::enable_events_timer_cb(lv_timer_t* timer) {
-    QrScene* self = static_cast<QrScene*>(timer->user_data);
+    
+    // ★★★ NULLチェック
     if (!self) {
-         Serial.println("ERROR: 03 enable_events_timer_cb self is NULL");
-         return;
+        return;
     }
 
-    self->eventEnableTimer = nullptr; // タイマー参照をクリア
+    lv_event_code_t code = lv_event_get_code(e);
 
-    if (ui_QrScreen) {
-        // スクリーン全体（背景）にクリックイベントを設定 (メニューに戻る用)
-        lv_obj_add_event_cb(ui_QrScreen, screen_event_cb, LV_EVENT_CLICKED, self);
-        Serial.println("03 CLICKED event callback added to ui_QrScreen.");
+    if (code == LV_EVENT_CLICKED) {
+        Serial.println("03 Screen clicked, returning to HomeScene.");
+        AlcedoPebble::getInstance().getHardwareManager().vibrate(50);
+        // ★変更: HomeSceneに戻る
+        AlcedoPebble::getInstance().getSceneManager().changeScene<HomeScene>();
     }
 }
