@@ -7,6 +7,7 @@
 
 lv_obj_t * ui_HomeScreen = NULL;
 lv_obj_t * ui_ScrollContainer = NULL;
+lv_obj_t * ui_Image1 = NULL;
 lv_obj_t * ui_Image2 = NULL;
 lv_obj_t * ui_PageMain = NULL;
 lv_obj_t * ui_CharacterImage = NULL;
@@ -41,6 +42,16 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_scroll_dir(ui_ScrollContainer, LV_DIR_VER);
     lv_obj_set_scroll_snap_y(ui_ScrollContainer, LV_SCROLL_SNAP_START);
 
+    ui_Image1 = lv_img_create(ui_ScrollContainer);
+    lv_img_set_src(ui_Image1, &ui_img_char_touched_png);
+    lv_obj_set_width(ui_Image1, LV_SIZE_CONTENT);   /// 110
+    lv_obj_set_height(ui_Image1, LV_SIZE_CONTENT);    /// 75
+    lv_obj_set_x(ui_Image1, 31);
+    lv_obj_set_y(ui_Image1, 41);
+    lv_obj_set_align(ui_Image1, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Image1, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_Image1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
     ui_Image2 = lv_img_create(ui_ScrollContainer);
     lv_img_set_src(ui_Image2, &ui_img_275677306);
     lv_obj_set_width(ui_Image2, LV_SIZE_CONTENT);   /// 1
@@ -61,11 +72,11 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_style_border_width(ui_PageMain, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_CharacterImage = lv_img_create(ui_PageMain);
-    lv_img_set_src(ui_CharacterImage, &ui_img_1321182874);
+    lv_img_set_src(ui_CharacterImage, &ui_img_char_idle_png);
     lv_obj_set_width(ui_CharacterImage, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_CharacterImage, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_CharacterImage, 50);
-    lv_obj_set_y(ui_CharacterImage, 56);
+    lv_obj_set_x(ui_CharacterImage, 22);
+    lv_obj_set_y(ui_CharacterImage, 68);
     lv_obj_set_align(ui_CharacterImage, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_CharacterImage, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_CharacterImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -83,8 +94,8 @@ void ui_HomeScreen_screen_init(void)
     ui_MainBatteryLabel = lv_label_create(ui_PageMain);
     lv_obj_set_width(ui_MainBatteryLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_MainBatteryLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_MainBatteryLabel, -53);
-    lv_obj_set_y(ui_MainBatteryLabel, 57);
+    lv_obj_set_x(ui_MainBatteryLabel, -58);
+    lv_obj_set_y(ui_MainBatteryLabel, 17);
     lv_obj_set_align(ui_MainBatteryLabel, LV_ALIGN_CENTER);
 
     ui_WeatherIcon = lv_img_create(ui_PageMain);
@@ -100,8 +111,8 @@ void ui_HomeScreen_screen_init(void)
     ui_TimeLabel = lv_label_create(ui_PageMain);
     lv_obj_set_width(ui_TimeLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_TimeLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_TimeLabel, -47);
-    lv_obj_set_y(ui_TimeLabel, 14);
+    lv_obj_set_x(ui_TimeLabel, -51);
+    lv_obj_set_y(ui_TimeLabel, -11);
     lv_obj_set_align(ui_TimeLabel, LV_ALIGN_CENTER);
 
     ui_PageMenu = lv_obj_create(ui_ScrollContainer);
@@ -164,6 +175,7 @@ void ui_HomeScreen_screen_destroy(void)
     // NULL screen variables
     ui_HomeScreen = NULL;
     ui_ScrollContainer = NULL;
+    ui_Image1 = NULL;
     ui_Image2 = NULL;
     ui_PageMain = NULL;
     ui_CharacterImage = NULL;

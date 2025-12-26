@@ -15,6 +15,7 @@ extern void ui_HomeScreen_screen_init(void);
 extern void ui_HomeScreen_screen_destroy(void);
 extern lv_obj_t * ui_HomeScreen;
 extern lv_obj_t * ui_ScrollContainer;
+extern lv_obj_t * ui_Image1;
 extern lv_obj_t * ui_Image2;
 extern lv_obj_t * ui_PageMain;
 extern lv_obj_t * ui_CharacterImage;

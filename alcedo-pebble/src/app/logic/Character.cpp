@@ -1,5 +1,6 @@
 #include "Character.hpp"
 #include "app/AlcedoPebble.hpp" // HardwareManager にアクセスするため
+#include <ui/ui.h>
 
 Character::Character(lv_obj_t* lvObject) : 
     lvCharacterImage(lvObject),
@@ -23,7 +24,8 @@ Character::~Character() {
 
 void Character::init() {
     if (!lvCharacterImage) return;
-    // lv_img_set_src(lvCharacterImage, &img_char_idle);
+    lv_img_set_src(lvCharacterImage, &ui_img_char_idle_png);
+	lv_obj_set_pos(lvCharacterImage, 22, 68);
     stateStartTime = millis();
 }
 
@@ -36,7 +38,8 @@ void Character::update(const ImuData& imu) {
         if (now - stateStartTime > 500) { // 0.5秒でIdleに戻る
             currentState = State::Idle;
             stateStartTime = now;
-            // lv_img_set_src(lvCharacterImage, &img_char_idle);
+            lv_img_set_src(lvCharacterImage, &ui_img_char_idle_png);
+			lv_obj_set_pos(lvCharacterImage, 22, 68);
         }
         return; // タッチ中は他の処理をしない
     }
@@ -77,7 +80,8 @@ void Character::onTouched() {
     if (currentState != State::Touched) {
         currentState = State::Touched;
         stateStartTime = millis();
-        // lv_img_set_src(lvCharacterImage, &img_char_touched);
+        lv_img_set_src(lvCharacterImage, &ui_img_char_touched_png);
+		lv_obj_set_pos(lvCharacterImage, 31, 41);
         
         // 振動（HardwareManager呼び出し）
         AlcedoPebble::getInstance().getHardwareManager().vibrate(12); // Triple Click - 100%
