@@ -9,8 +9,8 @@ SET(SOURCES ui_comp_image1.c
     ui_helpers.c
     ui_events.c
     ui_img_twitter_qr_png.c
-    ui_img_char_touched_png.c
     ui_img_275677306.c
+    ui_img_char_touched_png.c
     ui_img_char_idle_png.c
     ui_img_qr3_png.c
     ui_img_larger_stone_icon_png.c

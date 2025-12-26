@@ -43,8 +43,8 @@ extern lv_obj_t * ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
 LV_IMG_DECLARE(ui_img_twitter_qr_png);    // assets/Twitter_QR.png
-LV_IMG_DECLARE(ui_img_char_touched_png);    // assets/char_touched.png
 LV_IMG_DECLARE(ui_img_275677306);    // assets/River Scene - Morning_2x1.png
+LV_IMG_DECLARE(ui_img_char_touched_png);    // assets/char_touched.png
 LV_IMG_DECLARE(ui_img_char_idle_png);    // assets/char_idle.png
 LV_IMG_DECLARE(ui_img_qr3_png);    // assets/qr3.png
 LV_IMG_DECLARE(ui_img_larger_stone_icon_png);    // assets/Larger Stone Icon.png

@@ -7,9 +7,9 @@
 
 lv_obj_t * ui_HomeScreen = NULL;
 lv_obj_t * ui_ScrollContainer = NULL;
-lv_obj_t * ui_Image1 = NULL;
 lv_obj_t * ui_Image2 = NULL;
 lv_obj_t * ui_PageMain = NULL;
+lv_obj_t * ui_Image1 = NULL;
 lv_obj_t * ui_CharacterImage = NULL;
 lv_obj_t * ui_NotificationIcon = NULL;
 lv_obj_t * ui_MainBatteryLabel = NULL;
@@ -42,16 +42,6 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_scroll_dir(ui_ScrollContainer, LV_DIR_VER);
     lv_obj_set_scroll_snap_y(ui_ScrollContainer, LV_SCROLL_SNAP_START);
 
-    ui_Image1 = lv_img_create(ui_ScrollContainer);
-    lv_img_set_src(ui_Image1, &ui_img_char_touched_png);
-    lv_obj_set_width(ui_Image1, LV_SIZE_CONTENT);   /// 110
-    lv_obj_set_height(ui_Image1, LV_SIZE_CONTENT);    /// 75
-    lv_obj_set_x(ui_Image1, 31);
-    lv_obj_set_y(ui_Image1, 41);
-    lv_obj_set_align(ui_Image1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Image1, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
-    lv_obj_clear_flag(ui_Image1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
     ui_Image2 = lv_img_create(ui_ScrollContainer);
     lv_img_set_src(ui_Image2, &ui_img_275677306);
     lv_obj_set_width(ui_Image2, LV_SIZE_CONTENT);   /// 1
@@ -70,6 +60,16 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_style_bg_color(ui_PageMain, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_PageMain, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(ui_PageMain, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_Image1 = lv_img_create(ui_PageMain);
+    lv_img_set_src(ui_Image1, &ui_img_char_touched_png);
+    lv_obj_set_width(ui_Image1, LV_SIZE_CONTENT);   /// 110
+    lv_obj_set_height(ui_Image1, LV_SIZE_CONTENT);    /// 75
+    lv_obj_set_x(ui_Image1, 31);
+    lv_obj_set_y(ui_Image1, 41);
+    lv_obj_set_align(ui_Image1, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Image1, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_Image1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_CharacterImage = lv_img_create(ui_PageMain);
     lv_img_set_src(ui_CharacterImage, &ui_img_char_idle_png);
@@ -175,9 +175,9 @@ void ui_HomeScreen_screen_destroy(void)
     // NULL screen variables
     ui_HomeScreen = NULL;
     ui_ScrollContainer = NULL;
-    ui_Image1 = NULL;
     ui_Image2 = NULL;
     ui_PageMain = NULL;
+    ui_Image1 = NULL;
     ui_CharacterImage = NULL;
     ui_NotificationIcon = NULL;
     ui_MainBatteryLabel = NULL;
