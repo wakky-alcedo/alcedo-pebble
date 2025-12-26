@@ -117,7 +117,7 @@ void PebbleSkipScene::updateAnimation() {
         
         // 2. サイズ変更 (遠近法)
         // 60px -> 10px
-        int size = 60 - (int)(progress * 50.0f);
+        int size = 60 - (int)(progress * 30.0f);
         if (size < 10) size = 10;
         
         // 3. 回転アニメーション (高速回転)
