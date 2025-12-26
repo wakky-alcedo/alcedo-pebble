@@ -26,7 +26,7 @@ SwingResult SwingDetector::update(const ImuData& imu) {
 
     switch (state) {
     case State::IDLE:
-        if (accNorm > THRESHOLD_START) {
+        if (gyroZ > THRESHOLD_START) {
             state = State::WAIT_PEAK;
             maxAccelNorm = accNorm;
             maxGyroZ = gyroZ;
@@ -44,22 +44,23 @@ SwingResult SwingDetector::update(const ImuData& imu) {
         accumGyroXY += gyroXY;
         sampleCount++;
 
-        // 終了判定
-        if (accNorm < THRESHOLD_END) {
+        // 終了判定（ジャイロZ軸が閾値を下回ったら）
+        if (gyroZ < THRESHOLD_END) {
             state = State::IDLE;
             result.detected = true;
             
             // 1. パワー評価 (1.5G 〜 8.0G を 0.0 〜 1.0 に)
             // ★修正: 上限を5Gから8Gに上げ、簡単に満点が出ないようにする
 			result.power = maxAccelNorm;
-            float power_score = (maxAccelNorm - THRESHOLD_START) / (8.0f - THRESHOLD_START);
+			float max_power_g = 15.0f; // 最大パワーの基準値
+            float power_score = (maxAccelNorm - THRESHOLD_START) / (max_power_g - THRESHOLD_START);
             if (power_score > 1.0f) power_score = 1.0f;
             if (power_score < 0.0f) power_score = 0.0f;
 
             // 2. 回転評価
             // 手首のスナップが効いているほど高評価
 			result.spin = maxGyroZ;
-			float max_spin_dps = 30.0f; // 最大回転力の基準値
+			float max_spin_dps = 1000.0f; // 最大回転力の基準値
             float spin_score = maxGyroZ / max_spin_dps;
             if (spin_score > 1.0f) spin_score = 1.0f;
 
@@ -75,7 +76,7 @@ SwingResult SwingDetector::update(const ImuData& imu) {
             // パワー重視だが、回転と安定性もボーナスとして加味
             // Base: Power * 10
             // Bonus: Spin * 3 + Stability * 2
-            float rawScore = (power_score * 10.0f) + (spin_score * 3.0f) + (result.stability * 2.0f);
+            float rawScore = (power_score * 7.0f) + (spin_score * 2.0f) + (result.stability * 3.0f);
             
             // 係数を調整して 0 〜 15 くらいに収める
             result.estimatedSkips = (int)rawScore;

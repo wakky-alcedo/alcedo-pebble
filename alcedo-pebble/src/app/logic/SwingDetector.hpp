@@ -36,7 +36,7 @@ private:
     float accumGyroXY = 0.0f;     // ブレの蓄積[dps]
     int sampleCount = 0;          // サンプル数
     
-    // 閾値定数
-    const float THRESHOLD_START = 2.0f; // 開始閾値 (2.0G)
-    const float THRESHOLD_END = 0.8f;   // 終了閾値 (0.8G)
+    // 閾値定数（ジャイロZ軸）
+    const float THRESHOLD_START = 200.0f; // 開始閾値 (200 dps)
+    const float THRESHOLD_END = 50.0f;    // 終了閾値 (50 dps)
 };
