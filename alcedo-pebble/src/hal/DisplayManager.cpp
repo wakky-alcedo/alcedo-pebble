@@ -191,6 +191,10 @@ void DisplayManager::update() {
     #endif
 }
 
+/**
+ * @brief ディスプレイの明るさを設定します。
+ * @param percentage 明るさの割合 (0-100)
+ */
 void DisplayManager::setBrightness(uint8_t percentage) {
     uint32_t brightness = (percentage * 255) / 100;
     lgfx->setBrightness(brightness);

@@ -99,9 +99,8 @@ void SettingsScene::event_handler(lv_event_t * e) {
 
     // --- 明るさスライダー ---
     else if (target == ui_SettingsBrightnessSlider && code == LV_EVENT_VALUE_CHANGED) {
-        int32_t value = lv_slider_get_value(target); // 0-100
-        uint8_t brightness = (value * 255) / 100; // 0-255に変換
-        AlcedoPebble::getInstance().getDisplayManager().getLgfx()->setBrightness(brightness);
+        int32_t brightness = lv_slider_get_value(target); // 0-100
+        AlcedoPebble::getInstance().getDisplayManager().setBrightness(brightness);
     }
 
     // --- バイブスイッチ ---
@@ -129,6 +128,10 @@ void SettingsScene::update_timer_cb(lv_timer_t * timer) {
     if (ui_SettingsBatteryLabel) {
         lv_label_set_text_fmt(ui_SettingsBatteryLabel, "Battery: %d%% (%.2fV)", battData.percentage, battData.voltage);
     }
+
+	if (ui_SettingsBatteryBar) {
+		lv_bar_set_value(ui_SettingsBatteryBar, battData.percentage, LV_ANIM_OFF);
+	}
 
     // BLEステータスラベル更新
     if (ui_SettingsBleLabel) {

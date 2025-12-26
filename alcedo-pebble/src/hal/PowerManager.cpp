@@ -1,5 +1,6 @@
 #include "PowerManager.hpp"
 #include "app/AlcedoPebble.hpp" // DisplayManagerにアクセスするため
+#include "ui/ui.h"
 
 PowerManager::PowerManager() : 
     hwManager(nullptr),
@@ -64,7 +65,7 @@ void PowerManager::enterIdleMode() {
 void PowerManager::exitIdleMode() {
     isIdleMode = false;
     lastActivityTime = millis();
-    AlcedoPebble::getInstance().getDisplayManager().setBrightness(30); // バックライトON todo 変数で管理
+    AlcedoPebble::getInstance().getDisplayManager().setBrightness(lv_slider_get_value(ui_SettingsBrightnessSlider));
 }
 
 void PowerManager::enterDeepSleep() {
