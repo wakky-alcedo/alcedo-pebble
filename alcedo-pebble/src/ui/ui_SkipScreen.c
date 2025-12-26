@@ -6,6 +6,7 @@
 #include "ui.h"
 
 lv_obj_t * ui_SkipScreen = NULL;
+lv_obj_t * ui_SkipBackImage = NULL;
 lv_obj_t * ui_SkipMessageLabel = NULL;
 lv_obj_t * ui_SkipScoreLabel = NULL;
 lv_obj_t * ui_SkipStoneImage = NULL;
@@ -17,6 +18,14 @@ void ui_SkipScreen_screen_init(void)
 {
     ui_SkipScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_SkipScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_SkipBackImage = lv_img_create(ui_SkipScreen);
+    lv_img_set_src(ui_SkipBackImage, &ui_img_palet_stream_scene_sq_png);
+    lv_obj_set_width(ui_SkipBackImage, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_SkipBackImage, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_SkipBackImage, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_SkipBackImage, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_SkipBackImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_SkipMessageLabel = lv_label_create(ui_SkipScreen);
     lv_obj_set_width(ui_SkipMessageLabel, LV_SIZE_CONTENT);   /// 1
@@ -35,7 +44,7 @@ void ui_SkipScreen_screen_init(void)
     lv_label_set_text(ui_SkipScoreLabel, "0 SKIPS");
 
     ui_SkipStoneImage = lv_img_create(ui_SkipScreen);
-    lv_img_set_src(ui_SkipStoneImage, &ui_img_qr3_png);
+    lv_img_set_src(ui_SkipStoneImage, &ui_img_918493358);
     lv_obj_set_width(ui_SkipStoneImage, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_SkipStoneImage, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_SkipStoneImage, -1);
@@ -52,6 +61,7 @@ void ui_SkipScreen_screen_destroy(void)
 
     // NULL screen variables
     ui_SkipScreen = NULL;
+    ui_SkipBackImage = NULL;
     ui_SkipMessageLabel = NULL;
     ui_SkipScoreLabel = NULL;
     ui_SkipStoneImage = NULL;

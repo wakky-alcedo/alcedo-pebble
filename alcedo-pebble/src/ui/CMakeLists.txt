@@ -13,6 +13,8 @@ SET(SOURCES ui_comp_image1.c
     ui_img_1321182874.c
     ui_img_qr3_png.c
     ui_img_larger_stone_icon_png.c
-    ui_img_setting2_png.c)
+    ui_img_setting2_png.c
+    ui_img_palet_stream_scene_sq_png.c
+    ui_img_918493358.c)
 
 add_library(ui ${SOURCES})

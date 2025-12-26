@@ -14,6 +14,7 @@ extern "C" {
 extern void ui_SkipScreen_screen_init(void);
 extern void ui_SkipScreen_screen_destroy(void);
 extern lv_obj_t * ui_SkipScreen;
+extern lv_obj_t * ui_SkipBackImage;
 extern lv_obj_t * ui_SkipMessageLabel;
 extern lv_obj_t * ui_SkipScoreLabel;
 extern lv_obj_t * ui_SkipStoneImage;

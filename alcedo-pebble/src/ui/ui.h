@@ -48,6 +48,8 @@ LV_IMG_DECLARE(ui_img_1321182874);    // assets/Diagonal Perch Kingfisher (カ�
 LV_IMG_DECLARE(ui_img_qr3_png);    // assets/qr3.png
 LV_IMG_DECLARE(ui_img_larger_stone_icon_png);    // assets/Larger Stone Icon.png
 LV_IMG_DECLARE(ui_img_setting2_png);    // assets/setting2.png
+LV_IMG_DECLARE(ui_img_palet_stream_scene_sq_png);    // assets/Palet Stream Scene_sq.png
+LV_IMG_DECLARE(ui_img_918493358);    // assets/Gemini_Generated_Image_5p46595p46595p46 (カスタム).png
 
 // UI INIT
 void ui_init(void);
