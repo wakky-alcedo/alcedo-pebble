@@ -146,8 +146,9 @@ void HomeScene::update() {
     }
     
     // IMUによる操作検知 (参考コードの閾値 1.5f を採用)
-    if (std::abs(imuData.accelX) > 1.5f || std::abs(imuData.accelY) > 1.5f) {
-        AlcedoPebble::getInstance().getPowerManager().notifyActivity();
+	float activityThreshold = 6.0f;
+    if (std::abs(imuData.accelX) > activityThreshold || std::abs(imuData.accelY) > activityThreshold) {
+        // AlcedoPebble::getInstance().getPowerManager().notifyActivity();
     }
 
     updateCommonUi();
