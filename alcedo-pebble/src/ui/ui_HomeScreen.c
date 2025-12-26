@@ -16,8 +16,9 @@ lv_obj_t * ui_WeatherIcon = NULL;
 lv_obj_t * ui_TimeLabel = NULL;
 lv_obj_t * ui_PageMenu = NULL;
 lv_obj_t * ui_PebbleIconQR = NULL;
-lv_obj_t * ui_PebbleIconGame = NULL;
+lv_obj_t * ui_PebbleIconPebbleSkip = NULL;
 lv_obj_t * ui_PebbleIconSettings = NULL;
+lv_obj_t * ui_PebbleIconSafeCracker = NULL;
 // event funtions
 
 // build funtions
@@ -124,15 +125,15 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_add_flag(ui_PebbleIconQR, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_PebbleIconQR, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_PebbleIconGame = lv_img_create(ui_PageMenu);
-    lv_img_set_src(ui_PebbleIconGame, &ui_img_larger_stone_icon_png);
-    lv_obj_set_width(ui_PebbleIconGame, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_PebbleIconGame, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_PebbleIconGame, 18);
-    lv_obj_set_y(ui_PebbleIconGame, -32);
-    lv_obj_set_align(ui_PebbleIconGame, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_PebbleIconGame, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
-    lv_obj_clear_flag(ui_PebbleIconGame, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_PebbleIconPebbleSkip = lv_img_create(ui_PageMenu);
+    lv_img_set_src(ui_PebbleIconPebbleSkip, &ui_img_larger_stone_icon_png);
+    lv_obj_set_width(ui_PebbleIconPebbleSkip, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_PebbleIconPebbleSkip, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_PebbleIconPebbleSkip, 18);
+    lv_obj_set_y(ui_PebbleIconPebbleSkip, -32);
+    lv_obj_set_align(ui_PebbleIconPebbleSkip, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_PebbleIconPebbleSkip, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_PebbleIconPebbleSkip, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_PebbleIconSettings = lv_img_create(ui_PageMenu);
     lv_img_set_src(ui_PebbleIconSettings, &ui_img_setting2_png);
@@ -143,6 +144,16 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_align(ui_PebbleIconSettings, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_PebbleIconSettings, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_PebbleIconSettings, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_PebbleIconSafeCracker = lv_img_create(ui_PageMenu);
+    lv_img_set_src(ui_PebbleIconSafeCracker, &ui_img_gemini_generated_image_c210npc210npc210_png);
+    lv_obj_set_width(ui_PebbleIconSafeCracker, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_PebbleIconSafeCracker, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_PebbleIconSafeCracker, 18);
+    lv_obj_set_y(ui_PebbleIconSafeCracker, -32);
+    lv_obj_set_align(ui_PebbleIconSafeCracker, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_PebbleIconSafeCracker, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_PebbleIconSafeCracker, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
 }
 
@@ -162,7 +173,8 @@ void ui_HomeScreen_screen_destroy(void)
     ui_TimeLabel = NULL;
     ui_PageMenu = NULL;
     ui_PebbleIconQR = NULL;
-    ui_PebbleIconGame = NULL;
+    ui_PebbleIconPebbleSkip = NULL;
     ui_PebbleIconSettings = NULL;
+    ui_PebbleIconSafeCracker = NULL;
 
 }

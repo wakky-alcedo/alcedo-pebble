@@ -70,12 +70,15 @@ void HomeScene::onEnter() {
 	if (ui_PebbleIconQR) {
         pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconQR, Vec2D(120, 80), radius));
     }
-    if (ui_PebbleIconGame) {
-        pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconGame, Vec2D(80, 150), radius));
+    if (ui_PebbleIconPebbleSkip) {
+        pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconPebbleSkip, Vec2D(80, 150), radius));
     }
     if (ui_PebbleIconSettings) {
         pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconSettings, Vec2D(160, 150), radius));
     }
+	if (ui_PebbleIconSafeCracker) {
+		pebbles.push_back(std::make_unique<Pebble>(ui_PebbleIconSafeCracker, Vec2D(120, 220), radius));
+	}
 
     // 2. イベント登録 & 初期位置合わせ
     for (auto& p : pebbles) {
@@ -214,8 +217,10 @@ void HomeScene::pebble_event_cb(lv_event_t* e) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<QrScene>();
         } else if (pebble->getObj() == ui_PebbleIconSettings) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<SettingsScene>();
-        } else if (pebble->getObj() == ui_PebbleIconGame) {
+        } else if (pebble->getObj() == ui_PebbleIconPebbleSkip) {
 			AlcedoPebble::getInstance().getSceneManager().changeScene<PebbleSkipScene>();
+		} else if (pebble->getObj() == ui_PebbleIconSafeCracker) {
+			// AlcedoPebble::getInstance().getSceneManager().changeScene<SafeCrackerScene>(); // todo
 		}
     }
 }

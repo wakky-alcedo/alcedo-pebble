@@ -24,8 +24,9 @@ extern lv_obj_t * ui_WeatherIcon;
 extern lv_obj_t * ui_TimeLabel;
 extern lv_obj_t * ui_PageMenu;
 extern lv_obj_t * ui_PebbleIconQR;
-extern lv_obj_t * ui_PebbleIconGame;
+extern lv_obj_t * ui_PebbleIconPebbleSkip;
 extern lv_obj_t * ui_PebbleIconSettings;
+extern lv_obj_t * ui_PebbleIconSafeCracker;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

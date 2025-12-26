@@ -14,6 +14,7 @@ SET(SOURCES ui_comp_image1.c
     ui_img_qr3_png.c
     ui_img_larger_stone_icon_png.c
     ui_img_setting2_png.c
+    ui_img_gemini_generated_image_c210npc210npc210_png.c
     ui_img_palet_stream_scene_sq_png.c
     ui_img_918493358.c)
 
