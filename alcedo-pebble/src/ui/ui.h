@@ -46,6 +46,7 @@ LV_IMG_DECLARE(ui_img_twitter_qr_png);    // assets/Twitter_QR.png
 LV_IMG_DECLARE(ui_img_275677306);    // assets/River Scene - Morning_2x1.png
 LV_IMG_DECLARE(ui_img_1321182874);    // assets/Diagonal Perch Kingfisher (カスタム).png
 LV_IMG_DECLARE(ui_img_qr3_png);    // assets/qr3.png
+LV_IMG_DECLARE(ui_img_larger_stone_icon_png);    // assets/Larger Stone Icon.png
 LV_IMG_DECLARE(ui_img_setting2_png);    // assets/setting2.png
 
 // UI INIT

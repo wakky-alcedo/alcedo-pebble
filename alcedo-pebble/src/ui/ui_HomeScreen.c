@@ -125,7 +125,7 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_clear_flag(ui_PebbleIconQR, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_PebbleIconGame = lv_img_create(ui_PageMenu);
-    lv_img_set_src(ui_PebbleIconGame, &ui_img_setting2_png);
+    lv_img_set_src(ui_PebbleIconGame, &ui_img_larger_stone_icon_png);
     lv_obj_set_width(ui_PebbleIconGame, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_PebbleIconGame, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_PebbleIconGame, 18);

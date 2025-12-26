@@ -2,6 +2,7 @@
 #include "app/AlcedoPebble.hpp"
 #include "app/scenes/QrScene.hpp"
 #include "app/scenes/SettingsScene.hpp"
+#include "app/scenes/PebbleSkipScene.hpp"
 
 /**
  * @brief HomeSceneのコンストラクタ
@@ -213,6 +214,8 @@ void HomeScene::pebble_event_cb(lv_event_t* e) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<QrScene>();
         } else if (pebble->getObj() == ui_PebbleIconSettings) {
             AlcedoPebble::getInstance().getSceneManager().changeScene<SettingsScene>();
-        }
+        } else if (pebble->getObj() == ui_PebbleIconGame) {
+			AlcedoPebble::getInstance().getSceneManager().changeScene<PebbleSkipScene>();
+		}
     }
 }
