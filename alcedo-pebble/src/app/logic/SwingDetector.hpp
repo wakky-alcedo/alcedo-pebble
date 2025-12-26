@@ -4,9 +4,11 @@
 
 // スイング判定結果
 struct SwingResult {
-    bool detected = false; // スイングが確定したか
-    float power = 0.0f;    // スイングの強さ (0.0 - 1.0)
-    float stability = 0.0f; // 角度の安定性 (0.0 - 1.0, 1.0がベスト)
+    bool detected = false;
+    float power = 0.0f;     // スイングの強さ (0.0 - 1.0)
+    float spin = 0.0f;      // 回転力 (0.0 - 1.0)
+    float stability = 0.0f; // 軸の安定性 (0.0 - 1.0, 1.0がベスト)
+    int estimatedSkips = 0; // 推定スキップ回数
 };
 
 // --- SwingDetectorクラス ---
@@ -29,8 +31,10 @@ private:
     };
     State state = State::IDLE;
 
-    float maxAccelNorm = 0.0f; // 最大加速度（ノルム）
-    float startZAngle = 0.0f;  // 開始時の角度
+    float maxAccelNorm = 0.0f; // 最大加速度（ノルム）[G]
+    float maxGyroZ = 0.0f;        // 最大回転力[dps]
+    float accumGyroXY = 0.0f;     // ブレの蓄積[dps]
+    int sampleCount = 0;          // サンプル数
     
     // 閾値定数
     const float THRESHOLD_START = 1.5f; // 開始閾値 (1.5G)

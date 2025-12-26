@@ -20,7 +20,7 @@
 #include "hal/DisplayManager.hpp"
 
 // Config
-#define SCREEN_ROTATION 1 // 画面の回転設定 (0-7)
+#define SCREEN_ROTATION 0 // 画面の回転設定 (0-7)
 #define EVENT_DEBOUNCE_TIME 300 // ms
 
 // --- クラス前方宣言 ---
@@ -55,10 +55,10 @@ struct NotificationData {
     int count = 0;
 };
 struct ImuData {
-    float accelX = 0;
+    float accelX = 0;	// 単位: G
     float accelY = 0;
     float accelZ = 0;
-    float gyroX = 0;
+    float gyroX = 0;	// 単位: dps
     float gyroY = 0;
     float gyroZ = 0;
 };

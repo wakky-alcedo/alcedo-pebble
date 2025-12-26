@@ -1,6 +1,6 @@
 #include "app/scenes/PebbleSkipScene.hpp"
 #include "app/AlcedoPebble.hpp"
-#include "app/scenes/HomeScene.hpp" 
+#include "app/scenes/HomeScene.hpp"
 #include "ui/ui.h"
 
 PebbleSkipScene::PebbleSkipScene() {
@@ -46,11 +46,18 @@ void PebbleSkipScene::onEnter() {
     state = State::READY;
     skipCount = 0;
     
+    // ★修正: アニメーション変数の初期化 (再プレイ時の不具合防止)
+    currentBounce = 0;
+    nextBounceTime = 0;
+    
     // 石の初期位置リセット
     if (lvStoneImage) {
-        lv_obj_set_size(lvStoneImage, 60, 60); // 初期サイズ
+		lv_img_set_zoom(lvStoneImage, 256); // 初期サイズ
         lv_obj_align(lvStoneImage, LV_ALIGN_BOTTOM_MID, 0, -20); // 手前
         lv_img_set_angle(lvStoneImage, 0); // 角度リセット
+
+		// ★修正: 回転時の欠け防止フラグを追加
+        // lv_obj_add_flag(lvStoneImage, LV_OBJ_FLAG_OVERFLOW_VISIBLE);
     }
 
     if (lvMessageLabel) lv_label_set_text(lvMessageLabel, "READY...\nSWING!");
@@ -71,14 +78,18 @@ void PebbleSkipScene::update() {
         SwingResult result = swingDetector->update(imu);
 
         if (result.detected) {
-            Serial.printf("Swing Detected! Power: %.2f\n", result.power);
+            Serial.printf("Swing! Pow:%.2f Spin:%.2f Stab:%.2f\n", 
+                          result.power, result.spin, result.stability);
             
-            skipCount = (int)(result.power * 15.0f); // 最大15回くらい
-            if (result.power < 0.2f) skipCount = 0;
+            // 結果を保存
+            skipCount = result.estimatedSkips;
+            resPower = result.power;
+            resSpin = result.spin;
+            resStability = result.stability;
 
             state = State::THROWN;
             animStartTime = millis();
-            hw.vibrate(50); 
+            hw.vibrate(50); // キャスト音
 
             if (lvMessageLabel) lv_label_set_text(lvMessageLabel, "");
         }
@@ -115,14 +126,12 @@ void PebbleSkipScene::updateAnimation() {
 
         // 反映
         lv_obj_set_y(lvStoneImage, y); 
-        lv_obj_set_size(lvStoneImage, size, size);
+		lv_img_set_zoom(lvStoneImage, (size * 256) / 60); // サイズ変更
         lv_img_set_angle(lvStoneImage, angle); // 0.1度単位
     }
 
     // 4. 跳ねるタイミングで振動
     // 最初の跳ねは間隔が広く、徐々に狭くなるのがリアル
-    static int currentBounce = 0;
-    static unsigned long nextBounceTime = 0;
     
     if (elapsed == 0) { // 初期化
         currentBounce = 0;
@@ -150,11 +159,14 @@ void PebbleSkipScene::updateAnimation() {
 void PebbleSkipScene::showResult() {
     state = State::RESULT;
     
-    char buf[32];
+    // ★修正: 詳細情報の表示
+    char buf[128];
     if (skipCount == 0) {
-        sprintf(buf, "PLOP...\n(0 skips)");
+        sprintf(buf, "PLOP...\n(0 skips)\nPow:%.1f Stab:%.1f", resPower, resStability);
     } else {
-        sprintf(buf, "NICE!\n%d SKIPS", skipCount);
+        // 回転(Spin)と安定性(Stab)も表示
+        sprintf(buf, "%d SKIPS!\nPow: %.1f\nSpin: %.1f\nStab: %.1f", 
+                skipCount, resPower, resSpin, resStability);
     }
     
     if (lvScoreLabel) lv_label_set_text(lvScoreLabel, buf);

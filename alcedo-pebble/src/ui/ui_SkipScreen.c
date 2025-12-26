@@ -21,16 +21,16 @@ void ui_SkipScreen_screen_init(void)
     ui_SkipMessageLabel = lv_label_create(ui_SkipScreen);
     lv_obj_set_width(ui_SkipMessageLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_SkipMessageLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_SkipMessageLabel, -53);
-    lv_obj_set_y(ui_SkipMessageLabel, -52);
+    lv_obj_set_x(ui_SkipMessageLabel, 1);
+    lv_obj_set_y(ui_SkipMessageLabel, -17);
     lv_obj_set_align(ui_SkipMessageLabel, LV_ALIGN_CENTER);
     lv_label_set_text(ui_SkipMessageLabel, "SWING ME!");
 
     ui_SkipScoreLabel = lv_label_create(ui_SkipScreen);
     lv_obj_set_width(ui_SkipScoreLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_SkipScoreLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_SkipScoreLabel, -23);
-    lv_obj_set_y(ui_SkipScoreLabel, 22);
+    lv_obj_set_x(ui_SkipScoreLabel, 2);
+    lv_obj_set_y(ui_SkipScoreLabel, 37);
     lv_obj_set_align(ui_SkipScoreLabel, LV_ALIGN_TOP_MID);
     lv_label_set_text(ui_SkipScoreLabel, "0 SKIPS");
 

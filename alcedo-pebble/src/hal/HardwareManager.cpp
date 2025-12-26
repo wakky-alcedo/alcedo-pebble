@@ -163,12 +163,19 @@ void HardwareManager::update() {
 				float tem = currentImu.accelX;
 				currentImu.accelX = currentImu.accelY;
 				currentImu.accelY = -tem;
+
+				tem = currentImu.gyroX;
+				currentImu.gyroX = currentImu.gyroY;
+				currentImu.gyroY = -tem;
 			}
 			break;
 		case 1:
 			{
 				currentImu.accelX = -currentImu.accelX;
 				currentImu.accelY = -currentImu.accelY;
+
+				currentImu.gyroX = -currentImu.gyroX;
+				currentImu.gyroY = -currentImu.gyroY;
 			}
 			break;
 		case 2:
@@ -176,6 +183,10 @@ void HardwareManager::update() {
 				float tem = currentImu.accelX;
 				currentImu.accelX = -currentImu.accelY;
 				currentImu.accelY = tem;
+
+				tem = currentImu.gyroX;
+				currentImu.gyroX = -currentImu.gyroY;
+				currentImu.gyroY = tem;
 			}
 			break;
 		case 3:

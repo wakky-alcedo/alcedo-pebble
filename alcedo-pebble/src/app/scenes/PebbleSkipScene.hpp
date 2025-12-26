@@ -24,16 +24,24 @@ private:
     State state = State::READY;
 
     std::unique_ptr<SwingDetector> swingDetector;
+    
+    // 結果データ
     int skipCount = 0;
+    float resPower = 0.0f;
+    float resSpin = 0.0f;
+    float resStability = 0.0f;
 
-    // UIパーツへのポインタ (新しい名前に変更)
+    // UIパーツへのポインタ
     lv_obj_t* lvStoneImage = nullptr;
     lv_obj_t* lvScoreLabel = nullptr;
     lv_obj_t* lvMessageLabel = nullptr;
 
+    // アニメーション用
     unsigned long animStartTime = 0;
-    float animStoneX = 0;
-    float animStoneY = 0;
+    
+    // ★修正: static変数をメンバ変数に変更 (バグ修正)
+    int currentBounce = 0;
+    unsigned long nextBounceTime = 0;
 
     void updateAnimation();
     void showResult();
