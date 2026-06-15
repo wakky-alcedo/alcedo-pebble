@@ -39,3 +39,10 @@
 
 # debug information files
 *.dwo
+
+*.zip
+
+backup/
+/backup
+alcedo-pebble-cad/~$*
+alcedo-pebble-gui/cache
