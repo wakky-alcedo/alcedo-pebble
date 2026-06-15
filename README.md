@@ -1,6 +1,11 @@
 # alcedo-pebble
 1.28インチの円形タッチディスプレイを搭載した、キーホルダーとして日常的に持ち運べる小型デバイス「Alcedo Pebble (アルセド ぺブル)」
 
+## 使用ソフトウェアバージョン
+- SquareLine Studio v1.5.4
+  - BOARD PROPERTIES: Arduino with TFT_eSPI v1.1.2, LVGL: 8.3.11
+- 
+
 ポータブルキーホルダーデバイス「Alcedo Pebble」企画書
 ## 1. 企画趣旨
 1.28インチの円形タッチディスプレイを搭載した，キーホルダーとして日常的に持ち運べる小型デバイス「Alcedo Pebble (アルセド ぺブル)」を開発する．
@@ -13,19 +18,53 @@
 - Pebble: 川辺にある「小石」のように，自然と手に馴染む，丸くて親しみやすい存在であってほしいという願いを込めて．
 ## 3. デバイススペック
 ### 3.1. ボード主要コンポーネント
+[ESP32-S3-Touch-LCD-1.28 User Guide](https://spotpear.com/wiki/ESP32-S3-1.28inch-Round-LCD-Display-TouchScreen.html)
 - MCU: ESP32-S3R2 (WiFi/Bluetooth SoC, 240MHz, 2MB PSRAM内蔵)
 - Flash: W25Q128JVSIQ (16MB NOR-Flash)
 - USB-UART: CH343P
-- LDO: ME6217C33M5G (800mA, 低ドロップアウト)
+- LDO: ME6217C33M5G (800mA, 低ドロップアウト)(解像度:240×240)
 - 充電IC: ETA6096 (リチウム電池充電チップ)
 - IMU: QMI8658 (6軸慣性測定ユニット: 3軸ジャイロ + 3軸加速度)
+- ディスプレイ: 1.28インチ 円形ディスプレイ（タッチ機能付き）
 ### 3.2. インターフェース・その他
 - バッテリー: MX1.25 2P コネクタ (3.7Vリチウム電池対応)
 - USB: USB Type-C (USB1.1 ホスト/デバイス サポート)
 - ボタン: RESETボタン，BOOTボタン (ダウンロードモード用)
 ### 3.3. 外部接続コンポーネント
-- ディスプレイ: 1.28インチ 円形ディスプレイ（タッチ機能付き）
-- モーター: 振動モーター
+- モータ: リニアバイブレーションモータ
+- バイブレーションモータドライバ: [DRV2605L Haptic Driver Datasheet (PDF)](https://www.ti.com/lit/ds/symlink/drv2605l.pdf)
+- バッテリ: リチウムポリマーバッテリー 500mAh
+### 3.4 ピンアサイン
+
+- UART0: PCとのシリアル通信
+- I2C0: LCD，QMI8658
+- I2C1: DRV2605L
+
+| ESP32-S3R2 | LCD | SH1.0 | MX1.25 | QMI8658 | other |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| GPIO0 | | | | | BOOT0 |
+| GPIO1 | | | ADC | | |
+| GPIO2 | LCD_BL | | | | |
+| GPIO3 | | | | INT2 | |
+| GPIO4 | | | | INT1 | MOSFET1_CS |
+| GPIO5 | TP_INT | | | | MOSFET2_CS |
+| GPIO6 | TP_SDA | | | SDA | |
+| GPIO7 | TP_SCL | | | SCL | |
+| GPIO8 | LCD_DC | | | | |
+| GPIO9 | LCD_CS | | | | |
+| GPIO10 | LCD_CLK | | | | |
+| GPIO11 | LCD_MOSI | | | | |
+| GPIO12 | LCD_MISO | | | | |
+| GPIO13 | TP_RST | | | | |
+| GPIO14 | LCD_RST | | | | |
+| GPIO15 | | GPIO15 | | | DRV2605L_SDA |
+| GPIO16 | | GPIO16 | | | DRV2605L_SCL |
+| GPIO17 | | GPIO17 | | | |
+| GPIO18 | | GPIO18 | | | |
+| GPIO19 | | | | | |
+| GPIO20 | | | | | |
+| GPIO21 | | GPIO21 | | | |
+| GPIO33 | | GPIO33 | | | |
 
 ## 4. 機能
 - QRコード表示: 自己紹介やウェブサイトへのリンクを表示します．
@@ -50,29 +89,30 @@
 - デザイン: 水中には機能アイコンが刻まれた小石（Pebble）が複数配置される．
 - インタラクション: デバイスを傾けると，物理演算に従って小石が画面内を転がる．目的の小石をタップして機能を決定する．
 - UI構成図
-【水上】
-┌──────────────────┐
-│ メイン画面       │
-│ ・キャラクター   │
-│ ・時計、天気表示 │
-└─┬────────────────┘
-  │
-  │ 長押し or 下スワイプ
-  │（水中に潜るアニメーション）
-  ↓
-【水中】
-┌──────────────────┐
-│ メニュー画面     │
-│ ・機能アイコン付きの小石が転がっている │
-└─┬────────────────┘
-  │
-  │ 小石をタップ
-  │（波紋が広がるアニメーション）
-  ↓
-┌──────────────────┐
-│ 各機能画面       │
-│ (QR, ゲーム, etc)│
-└──────────────────┘
+```mermaid
+flowchart TD
+    %% ノード定義
+    Main["<b>メイン画面 (水上)</b><br>・キャラクター<br>・時計、天気表示"]
+    Menu["<b>メニュー画面 (水中)</b><br>・機能アイコン付きの小石が転がっている"]
+    Features["<b>各機能画面</b><br>QR, ゲーム, 設定 etc"]
+
+    %% 遷移定義
+    Main -->|"<b>長押し or 下スワイプ</b><br>（水中に潜るアニメーション）"| Menu
+    Menu -->|"<b>小石をタップ</b><br>（波紋が広がるアニメーション）"| Features
+
+    %% 逆方向の遷移（補足：戻る操作）
+    Features -.->|スワイプ or 戻るボタン| Menu
+    Menu -.->|上スワイプ| Main
+
+    %% スタイル定義 (任意)
+    classDef surface fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000;
+    classDef underwater fill:#0277bd,stroke:#004c8c,stroke-width:2px,color:#fff;
+    classDef feature fill:#fff,stroke:#333,stroke-width:2px,color:#000;
+
+    class Main surface;
+    class Menu underwater;
+    class Features feature;
+```
 
 ## 6. ソフトウェア設計方針
 メンテナンス性と拡張性を高めるため，役割ごとにクラスを分割した設計を採用する．
@@ -84,3 +124,4 @@
 - PhysicsEngine: メニュー画面での物理演算など，専門的な計算を行う．
 
 
+todo
